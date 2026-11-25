@@ -1,4 +1,4 @@
-# KOCH SpaceMouse – LCD keys for Alibre Design
+# KOCH 3Dconnexion Keys – SpaceMouse & Keyboard Pro keys for Alibre Design
 
 **Developed by [KOCH Engineering](https://www.linkedin.com/in/henrikjkoch/) (Henrik J. Koch, Denmark), with a lot of help from Claude (Anthropic).**
 
@@ -6,7 +6,7 @@ With this Alibre Design add-on you choose what the **12 LCD keys of a 3Dconnexio
 
 Alibre Design has no native 3Dconnexion integration for these keys, so the add-on adds one.
 
-![SpaceMouse keys dialog](docs/dialog.png)
+![3Dconnexion keys dialog](docs/dialog.png)
 
 ## Features
 
@@ -38,18 +38,18 @@ Alibre Design has no native 3Dconnexion integration for these keys, so the add-o
 3. **Close Alibre Design.**
 4. Double-click **`install.cmd`** and answer **Yes** to the administrator prompt.
    The script builds against your newest Alibre installation, installs to `C:\ProgramData\Alibre AddOns\KochSpaceMouse` and registers the add-on. Output goes to `install.log`.
-5. Start Alibre Design. You'll find the add-on under **Add-on → SpaceMouse → SpaceMouse keys…**
+5. Start Alibre Design. You'll find the add-on under **Add-on → 3Dconnexion → 3Dconnexion keys…**
 
-**Updating:** run `install.cmd` again. If Alibre is open, only the core is updated; then click **Add-on → SpaceMouse → Reload add-on**, so you don't need to restart Alibre.
+**Updating:** run `install.cmd` again. If Alibre is open, only the core is updated; then click **Add-on → 3Dconnexion → Reload add-on**, so you don't need to restart Alibre.
 
 **Uninstalling:** close Alibre and double-click **`uninstall.cmd`**. It removes the add-on and its entries in the 3DxWare profile. Your own settings are kept.
 
 ## Quick start
 
-1. Open a part in Alibre and go to **Add-on → SpaceMouse → SpaceMouse keys…**
+1. Open a part in Alibre and go to **Add-on → 3Dconnexion → 3Dconnexion keys…**
 2. Pick a context tab (**Part**, **Assembly**, **Sketch** or **Drawing**) and a device (**SpaceMouse Enterprise** or **Keyboard Pro**).
 3. Click a key in the preview, or a picker below it, type part of a command name (e.g. `fillet`), and press **Enter**.
-4. Click **Save to SpaceMouse**. The LCD updates within a second or two.
+4. Click **Save to devices**. The LCD updates within a second or two.
 
 Read the **[User guide](docs/USER-GUIDE.md)** for the details: shortcuts, icons, import/export and troubleshooting.
 
@@ -75,7 +75,7 @@ A future version will run *every* ribbon command directly, with no shortcut need
 ## How it works
 
 ```
-Alibre Design ──(AlibreX API: active window type)──► KOCH SpaceMouse add-on
+Alibre Design ──(AlibreX API: active window type)──► KOCH 3Dconnexion Keys add-on
       ▲                                                     │ writes KOCH_* actions, macros and
       │ keyboard shortcut                                   │ button mappings (name + 24×24 PNG)
       │                                                     ▼

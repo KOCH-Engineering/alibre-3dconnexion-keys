@@ -1,4 +1,4 @@
-# Removes the KOCH SpaceMouse add-on (KOCH Engineering).
+# Removes the KOCH 3Dconnexion Keys add-on (KOCH Engineering).
 # Your settings (%APPDATA%\Koch Engineering\SpaceMouse) and 3DxWare profile backups are kept.
 $ErrorActionPreference = 'Stop'
 $AddOnId    = '{C79D2D04-31E5-4887-83CC-6B2F46C2E768}'

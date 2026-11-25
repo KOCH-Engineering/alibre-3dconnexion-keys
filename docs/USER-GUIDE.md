@@ -1,20 +1,20 @@
-# KOCH SpaceMouse – User guide
+# KOCH 3Dconnexion Keys – User guide
 
 *KOCH Engineering · Henrik J. Koch · Denmark*
 
-This guide covers everything in the **SpaceMouse keys** dialog. For installation, see the [README](../README.md#install).
+This guide covers everything in the **3Dconnexion keys** dialog. For installation, see the [README](../README.md#install).
 
 ---
 
 ## 1. Opening the dialog
 
-In Alibre Design, choose **Add-on → SpaceMouse → SpaceMouse keys…**
+In Alibre Design, choose **Add-on → 3Dconnexion → 3Dconnexion keys…**
 
-The **SpaceMouse** menu has two entries:
+The **3Dconnexion** menu has two entries:
 
 | Entry | What it does |
 |---|---|
-| **SpaceMouse keys…** | Opens the dialog described below |
+| **3Dconnexion keys…** | Opens the dialog described below |
 | **Reload add-on** | Loads a newly installed version without restarting Alibre (used after `install.cmd` while Alibre is open) |
 
 ![Dialog overview](dialog.png)
@@ -74,7 +74,7 @@ When this is ticked (the default), the add-on checks the active Alibre window tw
 | **Import layout…** | Loads a layout XML (yours or a colleague's) into the dialog |
 | **Export layout…** | Saves all layouts to an XML file |
 | **Cancel** | Closes the dialog without changing anything |
-| **Save to SpaceMouse** | Saves your settings and writes the current context to 3DxWare. The LCD updates within a second or two. |
+| **Save to devices** | Saves your settings and writes the current context to 3DxWare. The LCD updates within a second or two. |
 
 ---
 
@@ -92,8 +92,8 @@ The 3DxWare driver can only send **keystrokes** to Alibre. A key therefore runs 
 ### 3.2 Giving an Alibre command a shortcut
 
 1. In Alibre, open the keyboard-shortcut customisation (under **Preferences / Customize**, depending on your version) and assign a free combination, e.g. `Ctrl+Alt+Shift+1`.
-2. In **SpaceMouse keys… → Edit functions…**, select the function, click the **Keyboard shortcut** box and **press the same keys**.
-3. Click **Close**, then **Save to SpaceMouse**.
+2. In **3Dconnexion keys… → Edit functions…**, select the function, click the **Keyboard shortcut** box and **press the same keys**.
+3. Click **Close**, then **Save to devices**.
 
 Tip: combinations with `Ctrl+Alt+Shift` are rarely used by Windows or other programs.
 
@@ -138,7 +138,7 @@ Images are saved in `%APPDATA%\Koch Engineering\SpaceMouse\icons\`. Simple, high
 - Before each write, the old profile is copied to `Cfg\bak\Alibre Design V2.koch-<date-time>.bak`. The 10 newest copies are kept.
 - **To restore the original:** close the 3DxWare settings window, copy the oldest `.koch-….bak` back as `Alibre Design V2.xml`, or run `uninstall.cmd`.
 
-**Keyboard Pro and the 3DxWare settings app:** keys you mapped *globally* in the 3Dconnexion app (e.g. Esc on key 8) live in a shared profile. A key you set in KOCH SpaceMouse belongs to the Alibre profile, so it applies **only while Alibre is active**. Leave a key on *(3DxWare default)* to keep your global mapping for it.
+**Keyboard Pro and the 3DxWare settings app:** keys you mapped *globally* in the 3Dconnexion app (e.g. Esc on key 8) live in a shared profile. A key you set in KOCH 3Dconnexion Keys belongs to the Alibre profile, so it applies **only while Alibre is active**. Leave a key on *(3DxWare default)* to keep your global mapping for it.
 
 ---
 
@@ -148,9 +148,9 @@ Images are saved in `%APPDATA%\Koch Engineering\SpaceMouse\icons\`. Simple, high
 |---|---|
 | The LCD shows the 3DxWare defaults or "Desktop" | Click in the Alibre window so it has focus. Check that 3DxWare shows the *Alibre Design* profile. If 3DxWare got stuck, restart the 3DxWare service or the PC. |
 | A key shows the right name but does nothing | The function has no shortcut, or the shortcut differs from Alibre's. See section 3.2. |
-| The keys don't follow Part/Assembly/Sketch | Make sure **Switch layout automatically** is ticked and click **Save to SpaceMouse** once. |
+| The keys don't follow Part/Assembly/Sketch | Make sure **Switch layout automatically** is ticked and click **Save to devices** once. |
 | The command list is short or has no icons | Open a part *and* an assembly window first (the add-on reads the ribbons of open windows), then reopen the dialog. |
-| The **SpaceMouse** menu is missing in Alibre | Check that `C:\ProgramData\Alibre AddOns\KochSpaceMouse` exists, then run `install.cmd` again with Alibre closed. Look in **Add-on Manager** that *KOCH SpaceMouse* is enabled. |
+| The **3Dconnexion** menu is missing in Alibre | Check that `C:\ProgramData\Alibre AddOns\KochSpaceMouse` exists, then run `install.cmd` again with Alibre closed. Look in **Add-on Manager** that *KOCH 3Dconnexion Keys* is enabled. |
 | Anything else | Look at `%LOCALAPPDATA%\Alibre AddOns\KochSpaceMouse\addon.log` and attach it to a [GitHub issue](../../issues). |
 
 ---
@@ -165,4 +165,4 @@ Close Alibre and double-click **`uninstall.cmd`**. It:
 
 ---
 
-*KOCH SpaceMouse is developed by KOCH Engineering (Henrik J. Koch, Denmark) with a lot of help from Claude (Anthropic). Feedback and ideas are welcome on [LinkedIn](https://www.linkedin.com/in/henrikjkoch/) or as GitHub issues.*
+*KOCH 3Dconnexion Keys is developed by KOCH Engineering (Henrik J. Koch, Denmark) with a lot of help from Claude (Anthropic). Feedback and ideas are welcome on [LinkedIn](https://www.linkedin.com/in/henrikjkoch/) or as GitHub issues.*

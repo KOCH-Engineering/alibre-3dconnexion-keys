@@ -10,12 +10,12 @@
     <OptionStrict>Off</OptionStrict>
     <OptionInfer>On</OptionInfer>
     <Version>0.2.0</Version>
-    <Product>KOCH SpaceMouse (KOCH Engineering)</Product>
-    <AssemblyTitle>KOCH SpaceMouse</AssemblyTitle>
+    <Product>KOCH 3Dconnexion Keys (KOCH Engineering)</Product>
+    <AssemblyTitle>KOCH 3Dconnexion Keys</AssemblyTitle>
     <Authors>KOCH Engineering</Authors>
     <Company>KOCH Engineering</Company>
     <Copyright>(c) 2026 KOCH Engineering</Copyright>
-    <Description>SpaceMouse LCD keys for Alibre Design - loader.</Description>
+    <Description>3Dconnexion keys (SpaceMouse Enterprise, Keyboard Pro) for Alibre Design - loader.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(AlibreInstallRoot)' == ''">

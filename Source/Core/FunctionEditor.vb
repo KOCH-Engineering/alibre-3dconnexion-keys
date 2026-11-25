@@ -101,7 +101,7 @@ Namespace KochSpaceMouse
 
             _hint = New Label With {.Location = New Point(x, 280), .Size = New Size(310, 70), .ForeColor = Color.DimGray,
                                     .Text = "The shortcut must be the same as the one the function has in Alibre " &
-                                            "(shown in brackets in Alibre's screen tips). The SpaceMouse key sends these keys. " & "Tip: Import from Alibre reads them for you."}
+                                            "(shown in brackets in Alibre's screen tips). The 3Dconnexion key sends these keys. " & "Tip: Import from Alibre reads them for you."}
             Controls.Add(_hint)
 
             Dim ok As New Button With {.Text = "Close", .Location = New Point(520, 398), .Size = New Size(84, 28), .DialogResult = DialogResult.OK}

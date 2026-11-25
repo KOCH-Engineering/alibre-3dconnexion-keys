@@ -84,9 +84,9 @@ Namespace KochSpaceMouse
             _settings.Save()
             Dim target = If(ctx = "", "Part", ctx)
             Apply(target)
-            MessageBox.Show(owner, "Saved. The SpaceMouse keys now show the " & target & " layout." &
+            MessageBox.Show(owner, "Saved. The keys now show the " & target & " layout." &
                             If(_settings.AutoSwitch, vbCrLf & "They will follow the active Alibre window.", ""),
-                            "SpaceMouse keys", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                            "3Dconnexion keys", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End Sub
 
         Public Sub Dispose() Implements IDisposable.Dispose

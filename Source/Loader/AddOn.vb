@@ -147,8 +147,8 @@ Namespace AlibreAddOnAssembly
 
         Public Function MenuItemText(menuId As Integer) As String Implements IAlibreAddOn.MenuItemText
             Select Case menuId
-                Case ROOT_ID : Return "SpaceMouse"
-                Case CMD_CONFIG : Return "SpaceMouse keys…"
+                Case ROOT_ID : Return "3Dconnexion"
+                Case CMD_CONFIG : Return "3Dconnexion keys…"
                 Case CMD_RELOAD : Return "Reload add-on"
                 Case Else : Return String.Empty
             End Select
@@ -156,9 +156,9 @@ Namespace AlibreAddOnAssembly
 
         Public Function MenuItemToolTip(menuId As Integer) As String Implements IAlibreAddOn.MenuItemToolTip
             Select Case menuId
-                Case CMD_CONFIG : Return "Choose the functions on the 12 LCD keys of the SpaceMouse Enterprise"
+                Case CMD_CONFIG : Return "Choose the functions on the keys of your SpaceMouse Enterprise and Keyboard Pro"
                 Case CMD_RELOAD : Return "Load a newly installed version without restarting Alibre Design"
-                Case Else : Return "KOCH SpaceMouse"
+                Case Else : Return "KOCH 3Dconnexion Keys"
             End Select
         End Function
 
@@ -182,7 +182,7 @@ Namespace AlibreAddOnAssembly
                     Case CMD_CONFIG
                         If _core Is Nothing Then LoadCore()
                         If _core Is Nothing Then
-                            MessageBox.Show(owner, "The SpaceMouse add-on could not start. See the log:" & vbCrLf & Log.FilePath, "SpaceMouse keys")
+                            MessageBox.Show(owner, "The 3Dconnexion keys add-on could not start. See the log:" & vbCrLf & Log.FilePath, "3Dconnexion keys")
                         Else
                             _core.ShowConfig(owner)
                         End If
@@ -192,11 +192,11 @@ Namespace AlibreAddOnAssembly
                         LoadCore()
                         Log.Write("Reloaded core " & before & " -> " & _coreVersion)
                         MessageBox.Show(owner, If(_core Is Nothing, "Reload failed - see the log:" & vbCrLf & Log.FilePath,
-                                                  "SpaceMouse add-on reloaded (version " & _coreVersion & ")."), "SpaceMouse keys")
+                                                  "3Dconnexion keys add-on reloaded (version " & _coreVersion & ")."), "3Dconnexion keys")
                 End Select
             Catch ex As Exception
                 Log.Write("Command " & menuId & " failed: " & ex.ToString())
-                MessageBox.Show(owner, "Something went wrong: " & ex.Message & vbCrLf & vbCrLf & "Log: " & Log.FilePath, "SpaceMouse keys")
+                MessageBox.Show(owner, "Something went wrong: " & ex.Message & vbCrLf & vbCrLf & "Log: " & Log.FilePath, "3Dconnexion keys")
             End Try
             Return Nothing
         End Function

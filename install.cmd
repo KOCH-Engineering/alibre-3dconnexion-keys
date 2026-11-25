@@ -1,5 +1,5 @@
 @echo off
-rem Double-click to build and install the "KOCH SpaceMouse" add-on for Alibre Design (KOCH Engineering).
+rem Double-click to build and install the "KOCH 3Dconnexion Keys" add-on for Alibre Design (KOCH Engineering).
 net session >nul 2>&1
 if %errorlevel% neq 0 (
   powershell -NoProfile -Command "Start-Process -FilePath '%~f0' -Verb RunAs"

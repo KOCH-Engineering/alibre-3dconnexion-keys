@@ -4,7 +4,8 @@
 - Keyboard Pro support: 12 macro keys (3 groups of 4), with their own layout per context and icons in the preview.
 - Device selector that shows only the 3Dconnexion devices 3DxWare knows about.
 - "KOCH Engineering" link in the dialog (Henrik J. Koch, Denmark).
-- New add-on icon.
+- Renamed to **KOCH 3Dconnexion Keys** (menu Add-on → 3Dconnexion), since it now covers both mouse and keyboard.
+- New add-on icon (SpaceMouse Enterprise seen from above).
 - `uninstall.cmd`.
 
 ## 0.5.0

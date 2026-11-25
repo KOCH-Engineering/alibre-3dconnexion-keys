@@ -1,5 +1,5 @@
 @echo off
-rem Double-click to remove the "KOCH SpaceMouse" add-on from Alibre Design (close Alibre first).
+rem Double-click to remove the "KOCH 3Dconnexion Keys" add-on from Alibre Design (close Alibre first).
 net session >nul 2>&1
 if %errorlevel% neq 0 (
   powershell -NoProfile -Command "Start-Process -FilePath '%~f0' -Verb RunAs"

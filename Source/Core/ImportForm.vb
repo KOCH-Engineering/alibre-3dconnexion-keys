@@ -51,7 +51,7 @@ Namespace KochSpaceMouse
             Next
 
             Dim info As New Label With {.Location = New Point(12, 12), .Size = New Size(696, 34), .Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right,
-                                        .Text = "These are the commands in Alibre's open windows. Tick the ones you want on the SpaceMouse. " &
+                                        .Text = "These are the commands in Alibre's open windows. Tick the ones you want on your 3Dconnexion keys. " &
                                                 "Open a part, an assembly, a sketch and a drawing first to see all of them."}
             Controls.Add(info)
             Controls.Add(New Label With {.Text = "Search", .Location = New Point(12, 56), .AutoSize = True})

@@ -9,12 +9,12 @@
     <OptionInfer>On</OptionInfer>
     <OptionExplicit>On</OptionExplicit>
     <Version>0.6.0</Version>
-    <Product>KOCH SpaceMouse (KOCH Engineering)</Product>
-    <AssemblyTitle>KOCH SpaceMouse core</AssemblyTitle>
+    <Product>KOCH 3Dconnexion Keys (KOCH Engineering)</Product>
+    <AssemblyTitle>KOCH 3Dconnexion Keys core</AssemblyTitle>
     <Company>KOCH Engineering</Company>
     <Authors>KOCH Engineering</Authors>
     <Copyright>(c) 2026 KOCH Engineering</Copyright>
-    <Description>SpaceMouse LCD keys for Alibre Design.</Description>
+    <Description>3Dconnexion keys (SpaceMouse Enterprise, Keyboard Pro) for Alibre Design.</Description>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <RestoreAdditionalProjectSources>https://api.nuget.org/v3/index.json</RestoreAdditionalProjectSources>
   </PropertyGroup>

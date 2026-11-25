@@ -1,4 +1,4 @@
-' KOCH SpaceMouse - the "SpaceMouse keys" dialog
+' KOCH SpaceMouse - the "3Dconnexion keys" dialog
 ' (c) 2026 KOCH Engineering - MIT License
 
 Imports System.Collections.Generic
@@ -38,7 +38,7 @@ Namespace KochSpaceMouse
             _settings = settings
             _context = If(Contexts.All.Contains(startContext), startContext, "Part")
 
-            Text = "SpaceMouse keys"
+            Text = "3Dconnexion keys"
             Font = New Font("Segoe UI", 9.0F)
             FormBorderStyle = FormBorderStyle.FixedDialog
             MaximizeBox = False
@@ -50,7 +50,7 @@ Namespace KochSpaceMouse
             BackColor = Color.White
 
             ' header
-            Dim title As New Label With {.Text = "SpaceMouse keys", .Font = New Font("Segoe UI", 12.0F, FontStyle.Bold),
+            Dim title As New Label With {.Text = "3Dconnexion keys", .Font = New Font("Segoe UI", 12.0F, FontStyle.Bold),
                                          .Location = New Point(20, 14), .AutoSize = True}
             Dim brand As New LinkLabel With {.Text = "KOCH Engineering", .AutoSize = True, .LinkBehavior = LinkBehavior.HoverUnderline,
                                              .LinkColor = Color.Gray, .ActiveLinkColor = Accent}
@@ -147,7 +147,7 @@ Namespace KochSpaceMouse
             Dim imp = MakeButton("Import layout…", 146, 628, 112)
             Dim exp = MakeButton("Export layout…", 264, 628, 112)
             Dim cancel = MakeButton("Cancel", 500, 628, 90)
-            Dim save = MakeButton("Save to SpaceMouse", 596, 628, 144)
+            Dim save = MakeButton("Save to devices", 596, 628, 144)
             save.BackColor = Color.FromArgb(&H19, &H19, &H19)
             save.ForeColor = Color.White
             save.FlatStyle = FlatStyle.Flat
@@ -379,7 +379,7 @@ Namespace KochSpaceMouse
                     f.Icon = Icons.ImportIcon(dlg.FileName, f)
                     Return True
                 Catch ex As Exception
-                    MessageBox.Show(owner, "Could not use that image: " & ex.Message, "SpaceMouse keys")
+                    MessageBox.Show(owner, "Could not use that image: " & ex.Message, "3Dconnexion keys")
                     Return False
                 End Try
             End Using
@@ -393,25 +393,25 @@ Namespace KochSpaceMouse
         End Sub
 
         Private Sub OnImport(sender As Object, e As EventArgs)
-            Using dlg As New OpenFileDialog With {.Title = "Import SpaceMouse layout", .Filter = "SpaceMouse layout (*.xml)|*.xml"}
+            Using dlg As New OpenFileDialog With {.Title = "Import 3Dconnexion layout", .Filter = "3Dconnexion layout (*.xml)|*.xml"}
                 If dlg.ShowDialog(Me) <> DialogResult.OK Then Return
                 Try
                     _settings.ImportLayout(dlg.FileName)
                     LoadContext()
                 Catch ex As Exception
-                    MessageBox.Show(Me, "Could not import: " & ex.Message, "SpaceMouse keys")
+                    MessageBox.Show(Me, "Could not import: " & ex.Message, "3Dconnexion keys")
                 End Try
             End Using
         End Sub
 
         Private Sub OnExport(sender As Object, e As EventArgs)
-            Using dlg As New SaveFileDialog With {.Title = "Export SpaceMouse layout", .Filter = "SpaceMouse layout (*.xml)|*.xml",
-                                                  .FileName = "SpaceMouse layout.xml"}
+            Using dlg As New SaveFileDialog With {.Title = "Export 3Dconnexion layout", .Filter = "3Dconnexion layout (*.xml)|*.xml",
+                                                  .FileName = "3Dconnexion layout.xml"}
                 If dlg.ShowDialog(Me) <> DialogResult.OK Then Return
                 Try
                     _settings.ExportLayout(dlg.FileName)
                 Catch ex As Exception
-                    MessageBox.Show(Me, "Could not export: " & ex.Message, "SpaceMouse keys")
+                    MessageBox.Show(Me, "Could not export: " & ex.Message, "3Dconnexion keys")
                 End Try
             End Using
         End Sub
@@ -430,7 +430,7 @@ Namespace KochSpaceMouse
                 Dim r = MessageBox.Show(Me, "These functions have no keyboard shortcut yet, so their keys will show the name and icon but do nothing:" &
                                         vbCrLf & vbCrLf & String.Join(vbCrLf, missing) & vbCrLf & vbCrLf &
                                         "Give them a shortcut in Alibre and in 'Edit functions…'. Save anyway?",
-                                        "SpaceMouse keys", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+                                        "3Dconnexion keys", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
                 If r <> DialogResult.Yes Then Return
             End If
             DialogResult = DialogResult.OK
