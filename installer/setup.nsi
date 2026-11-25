@@ -12,7 +12,7 @@ Unicode true
 !include "LogicLib.nsh"
 
 !define APPNAME   "KOCH 3Dconnexion Keys (Alibre add-on)"
-!define VERSION   "0.6.1"
+!define VERSION   "0.6.2"
 !define PUBLISHER "KOCH Engineering"
 !define ADDONID   "{C79D2D04-31E5-4887-83CC-6B2F46C2E768}"
 !define UNINSTKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\KochSpaceMouse"

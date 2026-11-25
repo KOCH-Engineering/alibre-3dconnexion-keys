@@ -52,18 +52,41 @@ Namespace KochSpaceMouse
             ' header
             Dim title As New Label With {.Text = "3Dconnexion keys", .Font = New Font("Segoe UI", 12.0F, FontStyle.Bold),
                                          .Location = New Point(20, 14), .AutoSize = True}
-            Dim brand As New LinkLabel With {.Text = "KOCH Engineering", .AutoSize = True, .LinkBehavior = LinkBehavior.HoverUnderline,
-                                             .LinkColor = Color.Gray, .ActiveLinkColor = Accent}
-            brand.Location = New Point(ClientSize.Width - 20 - TextRenderer.MeasureText(brand.Text, Font).Width, 18)
+            ' credits block, always visible (top right, centred)
+            Const bw = 220
+            Dim bx = ClientSize.Width - 20 - bw
+            Dim by = 8
             Dim brandTip As New ToolTip()
-            brandTip.SetToolTip(brand, "KOCH Engineering · Henrik J. Koch · Denmark" & vbCrLf & "Click for more")
-            AddHandler brand.LinkClicked, Sub()
-                                              Using a As New AboutForm()
-                                                  a.ShowDialog(Me)
-                                              End Using
-                                          End Sub
+            Dim openLinkedIn As LinkLabelLinkClickedEventHandler =
+                Sub(snd, ev)
+                    Try
+                        Diagnostics.Process.Start("https://www.linkedin.com/in/henrikjkoch/")
+                    Catch
+                    End Try
+                End Sub
+            For Each ln In {"KOCH Engineering", "Henrik J. Koch", "Denmark", "© 2026 · About"}
+                Dim f = If(ln = "KOCH Engineering", New Font("Segoe UI", 9.0F, FontStyle.Bold), New Font("Segoe UI", 8.25F))
+                Dim h = TextRenderer.MeasureText(ln, f).Height
+                Dim lk As New LinkLabel With {.Text = ln, .Font = f, .AutoSize = False, .TextAlign = ContentAlignment.MiddleCenter,
+                                              .Location = New Point(bx, by), .Size = New Size(bw, h), .LinkBehavior = LinkBehavior.HoverUnderline,
+                                              .LinkColor = If(ln = "KOCH Engineering", Accent, Color.Gray), .ActiveLinkColor = Accent}
+                If ln = "Denmark" Then lk.LinkArea = New LinkArea(0, 0)
+                If ln.StartsWith("©") Then
+                    lk.LinkArea = New LinkArea(ln.IndexOf("About"), 5)
+                    AddHandler lk.LinkClicked, Sub()
+                                                   Using ab As New AboutForm()
+                                                       ab.ShowDialog(Me)
+                                                   End Using
+                                               End Sub
+                ElseIf ln <> "Denmark" Then
+                    AddHandler lk.LinkClicked, openLinkedIn
+                    brandTip.SetToolTip(lk, "Open LinkedIn")
+                End If
+                lk.ForeColor = Color.Gray
+                Controls.Add(lk)
+                by += h
+            Next
             Controls.Add(title)
-            Controls.Add(brand)
 
             ' context tabs
             Dim x = 20

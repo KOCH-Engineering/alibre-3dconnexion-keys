@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.6.2 – 2026-11-25
+- Credits always visible at the top right of the dialog: KOCH Engineering · Henrik J. Koch · Denmark · © 2026 (links to LinkedIn and the About window).
+
 ## 0.6.1 – 2026-11-25
 - About window: click "KOCH Engineering" in the dialog (KOCH Engineering · Henrik J. Koch · Denmark · © 2026, links to LinkedIn and GitHub).
 - Windows installer (`KOCH-3Dconnexion-Keys-Setup-0.6.1.exe`) with uninstall from Windows Settings.
