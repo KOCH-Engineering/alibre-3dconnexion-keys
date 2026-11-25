@@ -157,7 +157,7 @@ Images are saved in `%APPDATA%\Koch Engineering\SpaceMouse\icons\`. Simple, high
 
 ## 8. Uninstalling
 
-Close Alibre and double-click **`uninstall.cmd`**. It:
+Close Alibre and uninstall from **Windows Settings → Apps → KOCH 3Dconnexion Keys (Alibre add-on)** (or run `uninstall.cmd` if you installed from source). It:
 
 - unregisters and deletes the add-on,
 - removes all `KOCH_` entries from the 3DxWare profiles (a `.before-uninstall.bak` copy is made),

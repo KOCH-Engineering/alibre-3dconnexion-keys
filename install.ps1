@@ -2,7 +2,7 @@
 # Easiest: double-click install.cmd. Requires the .NET SDK.
 #
 # If Alibre Design is running, only the core is updated (no restart needed):
-# then click Add-on > SpaceMouse > Reload add-on in Alibre.
+# then click Add-on > 3Dconnexion > Reload add-on in Alibre.
 
 $ErrorActionPreference = 'Stop'
 
@@ -51,7 +51,7 @@ Copy-Item (Join-Path $CoreOut 'defaults') $InstallDir -Recurse -Force
 if ($quick) {
     Write-Host ''
     Write-Host 'Alibre Design is running: the core was updated.' -ForegroundColor Green
-    Write-Host 'In Alibre click  Add-on > SpaceMouse > Reload add-on  to use it.' -ForegroundColor Green
+    Write-Host 'In Alibre click  Add-on > 3Dconnexion > Reload add-on  to use it.' -ForegroundColor Green
     exit 0
 }
 

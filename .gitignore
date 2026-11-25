@@ -10,3 +10,4 @@ uninstall.log
 test/
 dlg_screen.png
 picker.png
+*.exe

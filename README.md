@@ -31,18 +31,22 @@ Alibre Design has no native 3Dconnexion integration for these keys, so the add-o
 
 ## Install
 
-> A packaged installer is planned. For now you build from source, which takes about one minute.
+1. Download `KOCH-3Dconnexion-Keys-Setup-x.y.z.zip` from **[Releases](../../releases)** and unzip it.
+2. Close Alibre Design and run `KOCH-3Dconnexion-Keys-Setup-x.y.z.exe` (Yes / Next / I Agree / Finish).
+3. Start Alibre Design and click **Add-on → 3Dconnexion → 3Dconnexion keys…**
 
-1. Install the [.NET SDK](https://dotnet.microsoft.com/download) (5.0 or newer) if you don't have it.
-2. Download or clone this repository.
-3. **Close Alibre Design.**
-4. Double-click **`install.cmd`** and answer **Yes** to the administrator prompt.
-   The script builds against your newest Alibre installation, installs to `C:\ProgramData\Alibre AddOns\KochSpaceMouse` and registers the add-on. Output goes to `install.log`.
-5. Start Alibre Design. You'll find the add-on under **Add-on → 3Dconnexion → 3Dconnexion keys…**
+The installer is not code-signed, so Windows SmartScreen may say *"Windows protected your PC"*: click **More info → Run anyway**.
 
-**Updating:** run `install.cmd` again. If Alibre is open, only the core is updated; then click **Add-on → 3Dconnexion → Reload add-on**, so you don't need to restart Alibre.
+**Uninstall** from **Windows Settings → Apps → KOCH 3Dconnexion Keys (Alibre add-on)**. The keys go back to the 3DxWare defaults; your own settings are kept.
 
-**Uninstalling:** close Alibre and double-click **`uninstall.cmd`**. It removes the add-on and its entries in the 3DxWare profile. Your own settings are kept.
+### Install from source (developers)
+
+1. Install the [.NET SDK](https://dotnet.microsoft.com/download) (5.0 or newer).
+2. Clone this repository, **close Alibre Design**, double-click **`install.cmd`** and answer **Yes**.
+   It builds against your newest Alibre installation, installs to `C:\ProgramData\Alibre AddOns\KochSpaceMouse` and registers the add-on (log: `install.log`).
+3. Later updates: run `install.cmd` while Alibre is open – only the core is replaced – then click **Add-on → 3Dconnexion → Reload add-on**. `uninstall.cmd` removes a source install.
+
+To build the installer, install [NSIS](https://nsis.sourceforge.io/) and run `makensis installer\setup.nsi` after building both projects in Release.
 
 ## Quick start
 
@@ -102,7 +106,7 @@ Source/
 ## Roadmap
 
 - [ ] Run **any** ribbon command without a keyboard shortcut. The add-on will reserve hidden hotkeys and click the ribbon item inside Alibre.
-- [ ] Signed one-click installer (like [Export Parts](https://github.com/KOCH-Engineering/alibre-export-parts)).
+- [ ] Code-signed installer.
 - [ ] More 3Dconnexion devices (SpaceMouse Pro, CadMouse Pro).
 
 ## Related
