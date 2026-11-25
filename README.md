@@ -13,6 +13,7 @@ Alibre Design has no native 3Dconnexion integration for these keys, so the add-o
 - **12 LCD keys** on the SpaceMouse Enterprise, each with a name and an icon on the display.
 - **12 macro keys** on the Keyboard Pro, shown as three groups of four. The keyboard has no display, but the dialog still shows icons, so you can see what is mapped where.
 - **Four layouts per device:** Part, Assembly, Sketch and Drawing. The add-on follows the active Alibre window and updates the keys within about half a second.
+- **No manual macros.** The add-on creates the 3DxWare macros, button actions (name + icon) and key assignments for you – nothing to set up in the 3Dconnexion app.
 - **Every Alibre command in one list.** The add-on reads Alibre's ribbon at runtime, roughly 1,300 commands with their real Alibre icons.
 - **Type to search** in every key picker. Functions already used on another key are highlighted.
 - **Custom icons:** use Alibre's, generate a coloured initials tile, or pick your own PNG/JPG.
@@ -53,7 +54,7 @@ To build the installer, install [NSIS](https://nsis.sourceforge.io/) and run `ma
 1. Open a part in Alibre and go to **Add-on → 3Dconnexion → 3Dconnexion keys…**
 2. Pick a context tab (**Part**, **Assembly**, **Sketch** or **Drawing**) and a device (**SpaceMouse Enterprise** or **Keyboard Pro**).
 3. Click a key in the preview, or a picker below it, type part of a command name (e.g. `fillet`), and press **Enter**.
-4. Click **Save to devices**. The LCD updates within a second or two.
+4. Click **Save to devices**. The add-on creates the macros and key assignments in 3DxWare for you, and the LCD updates within a second or two.
 
 Read the **[User guide](docs/USER-GUIDE.md)** for the details: shortcuts, icons, import/export and troubleshooting.
 

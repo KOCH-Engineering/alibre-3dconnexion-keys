@@ -19,6 +19,9 @@ The **3Dconnexion** menu has two entries:
 
 ![Dialog overview](dialog.png)
 
+> **You never have to make macros in the 3Dconnexion settings yourself.**
+> When you choose a function for a key and click **Save to devices**, the add-on creates everything 3DxWare needs on its own: a **macro** with the function's keyboard shortcut, a **button action** with its name and icon, and the **key assignment** on your SpaceMouse Enterprise or Keyboard Pro. It does this for every context (Part, Assembly, Sketch, Drawing) and swaps them automatically when you change window in Alibre. You will see these entries in the 3Dconnexion app as macros and actions whose names start with **KOCH_** – leave them alone; the add-on keeps them up to date and removes them again when you uninstall.
+
 ---
 
 ## 2. The dialog, top to bottom
@@ -132,6 +135,9 @@ Images are saved in `%APPDATA%\Koch Engineering\SpaceMouse\icons\`. Simple, high
 ---
 
 ## 6. What the add-on changes in 3DxWare
+
+The add-on writes the macros, button actions and key assignments for you (see the note in section 1) – there is nothing to set up in the 3Dconnexion app.
+
 
 - It only writes to Alibre's profile, `%APPDATA%\3Dconnexion\3DxWare\Cfg\Alibre Design V2.xml`.
 - It only adds or removes entries whose IDs start with **`KOCH_`**. Your other 3DxWare settings (speed, axes, radial menus, other keys) are not touched.

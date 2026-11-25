@@ -17,6 +17,9 @@ GETTING STARTED
 4. Click a key, type part of a command name (e.g. "fillet") and press Enter.
 5. Click "Save to devices".
 
+You don't have to make macros in the 3Dconnexion app: the add-on creates the
+macros, names, icons and key assignments in 3DxWare for you.
+
 A key runs an Alibre command by sending its keyboard shortcut. Commands with
 a shortcut work at once; for others, give them a shortcut in Alibre and enter
 the same shortcut under "Edit functions...".
