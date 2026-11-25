@@ -83,6 +83,14 @@ Namespace KochSpaceMouse
                     Case "Henrik J. Koch"
                         AddHandler lk.LinkClicked, openLinkedIn
                         brandTip.SetToolTip(lk, "Open LinkedIn")
+                        ' small icon right of the name: linkedin.png in the add-on folder if present, else a generic "open link" glyph
+                        Dim tw = TextRenderer.MeasureText(ln, f).Width
+                        Dim pic As New PictureBox With {.Size = New Size(14, 14), .Cursor = Cursors.Hand,
+                                                        .Location = New Point(bx + (bw + tw) \ 2 + 2, by + (h - 14) \ 2),
+                                                        .Image = LinkIcon(14), .SizeMode = PictureBoxSizeMode.Zoom}
+                        AddHandler pic.Click, Sub() openLinkedIn(pic, Nothing)
+                        brandTip.SetToolTip(pic, "Open LinkedIn")
+                        Controls.Add(pic)
                     Case Else
                         lk.LinkArea = New LinkArea(0, 0)
                 End Select
@@ -290,6 +298,30 @@ Namespace KochSpaceMouse
         End Function
 
         ' ---------------------------------------------------------------- state
+
+        Private Shared Function LinkIcon(size As Integer) As Image
+            Try
+                Dim own = IO.Path.Combine(Settings.Folder, "linkedin.png")
+                If Not IO.File.Exists(own) Then own = IO.Path.Combine(Plugin.AddOnFolder, "defaults", "linkedin.png")
+                If IO.File.Exists(own) Then
+                    Using src = Image.FromFile(own)
+                        Return New Bitmap(src, size, size)
+                    End Using
+                End If
+            Catch
+            End Try
+            ' generic "open in browser" glyph: square with an arrow out of the corner
+            Dim b As New Bitmap(size * 4, size * 4)
+            Using g = Graphics.FromImage(b), p As New Pen(Accent, size * 0.5F)
+                g.SmoothingMode = SmoothingMode.AntiAlias
+                Dim s = size * 4
+                g.DrawLines(p, {New PointF(s * 0.45F, s * 0.18F), New PointF(s * 0.15F, s * 0.18F), New PointF(s * 0.15F, s * 0.85F),
+                                New PointF(s * 0.82F, s * 0.85F), New PointF(s * 0.82F, s * 0.55F)})
+                g.DrawLine(p, s * 0.45F, s * 0.55F, s * 0.85F, s * 0.15F)
+                g.DrawLines(p, {New PointF(s * 0.58F, s * 0.15F), New PointF(s * 0.85F, s * 0.15F), New PointF(s * 0.85F, s * 0.42F)})
+            End Using
+            Return New Bitmap(b, size, size)
+        End Function
 
         Friend ReadOnly Property CurrentLayout As String()
             Get
