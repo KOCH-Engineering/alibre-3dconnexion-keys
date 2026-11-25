@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.1 – 2026-11-25
+- About window: click "KOCH Engineering" in the dialog (KOCH Engineering · Henrik J. Koch · Denmark · © 2026, links to LinkedIn and GitHub).
+- Windows installer (`KOCH-3Dconnexion-Keys-Setup-0.6.1.exe`) with uninstall from Windows Settings.
+
 ## 0.6.0 – 2026-11-25
 - Keyboard Pro support: 12 macro keys (3 groups of 4), with their own layout per context and icons in the preview.
 - Device selector that shows only the 3Dconnexion devices 3DxWare knows about.
