@@ -26,9 +26,13 @@ The **3Dconnexion** menu has two entries:
 
 ## 2. The dialog, top to bottom
 
+### 2.0 Header
+
+At the top right you'll find who made the add-on: **KOCH Engineering** (click it to open the *About* window with the version number and a link to the source code), **Henrik J. Koch** with a LinkedIn link, and **Denmark © 2026**.
+
 ### 2.1 Context tabs: Part · Assembly · Sketch · Drawing
 
-Each context has its own layout. The tab you choose decides which layout you are editing.
+Each context has its own layout. The tab you choose decides which layout you are editing. The tab that opens first is the one matching the window you have open in Alibre.
 
 | Context | Active when… |
 |---|---|
