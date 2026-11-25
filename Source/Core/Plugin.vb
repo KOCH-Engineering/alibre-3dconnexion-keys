@@ -41,13 +41,29 @@ Namespace KochSpaceMouse
             _timer.Start()
         End Sub
 
+        Private _designTicks As Integer
+        Private _prewarmed As Boolean
+
         Private Sub OnTick(sender As Object, e As EventArgs)
-            If Not _settings.AutoSwitch Then Return
             Dim ctx As String = ""
             Try
                 ctx = _getContext()
             Catch
             End Try
+            ' read Alibre's command list in the background ~5 s after the first design window, so the dialog opens fast
+            If Not _prewarmed AndAlso ctx <> "" Then
+                _designTicks += 1
+                If _designTicks >= 10 Then
+                    _prewarmed = True
+                    Try
+                        Dim n = AlibreCommands.ScanCached().Count
+                        _log("Pre-read " & n & " Alibre commands: " & String.Join("; ", AlibreCommands.LastReport.Where(Function(l) l.StartsWith("Scan took") OrElse l.StartsWith("Commands found"))))
+                    Catch ex As Exception
+                        _log("Pre-read failed: " & ex.Message)
+                    End Try
+                End If
+            End If
+            If Not _settings.AutoSwitch Then Return
             If ctx = "" OrElse ctx = _applied Then Return
             Apply(ctx)
         End Sub

@@ -27,7 +27,7 @@ Namespace KochSpaceMouse
         Private _loading As Boolean
         ' Alibre commands found in its ribbons that are not (yet) in the catalog
         Private ReadOnly _alibre As New List(Of KeyFunction)
-        Private ReadOnly _alibreImages As New Dictionary(Of KeyFunction, Bitmap)
+        Private ReadOnly _alibreImages As New Dictionary(Of KeyFunction, FoundCommand)
 
         Private Shared ReadOnly DefaultItem As String = "(3DxWare default)"
         Private Shared ReadOnly Red As Color = Color.FromArgb(&HC6, &H28, &H28)
@@ -187,7 +187,7 @@ Namespace KochSpaceMouse
         Private Sub ScanAlibre()
             Try
                 Cursor = Cursors.WaitCursor
-                Dim found = AlibreCommands.Scan()
+                Dim found = AlibreCommands.ScanCached()
                 For Each line In AlibreCommands.LastReport
                     Diag.Log("Scan: " & line)
                 Next
@@ -199,7 +199,7 @@ Namespace KochSpaceMouse
                         .Id = "alibre_" & System.Text.RegularExpressions.Regex.Replace(c.Id, "[^A-Za-z0-9_]", "_"),
                         .Name = c.Caption, .Shortcut = c.Shortcut, .Category = AlibreCommands.GuessCategory(c)}
                     _alibre.Add(kf)
-                    If c.Image IsNot Nothing Then _alibreImages(kf) = c.Image
+                    _alibreImages(kf) = c
                 Next
             Catch ex As Exception
                 Diag.Log("Scan failed: " & ex.ToString())
@@ -210,8 +210,10 @@ Namespace KochSpaceMouse
 
         ''' <summary>Icon for a catalog function or a not-yet-imported Alibre command.</summary>
         Friend Function IconFor(f As KeyFunction, size As Integer) As Bitmap
+            Dim fc As FoundCommand = Nothing
             Dim img As Bitmap = Nothing
-            If _alibreImages.TryGetValue(f, img) Then
+            If _alibreImages.TryGetValue(f, fc) Then img = fc.Image
+            If img IsNot Nothing Then
                 Dim b As New Bitmap(size, size)
                 Using g = Graphics.FromImage(b)
                     g.InterpolationMode = InterpolationMode.HighQualityBicubic
@@ -226,8 +228,9 @@ Namespace KochSpaceMouse
         Private Sub Adopt(f As KeyFunction)
             If Not _alibre.Contains(f) Then Return
             _alibre.Remove(f)
-            Dim img As Bitmap = Nothing
-            If _alibreImages.TryGetValue(f, img) Then
+            Dim fc As FoundCommand = Nothing
+            If _alibreImages.TryGetValue(f, fc) AndAlso fc.Image IsNot Nothing Then
+                Dim img = fc.Image
                 Try
                     IO.Directory.CreateDirectory(Settings.IconFolder)
                     img.Save(IO.Path.Combine(Settings.IconFolder, f.Id & ".png"), Imaging.ImageFormat.Png)

@@ -22,13 +22,52 @@ Namespace KochSpaceMouse
         Public Property Shortcut As String = ""
         Public Property Page As String = ""
         Public Property Window As String = ""
+        ''' <summary>Ribbon items for this command; the icon is rendered only when first needed.</summary>
+        Friend ReadOnly Items As New List(Of Object)
+        Private _image As Bitmap
+        Private _imageDone As Boolean
+
         Public Property Image As Bitmap
+            Get
+                If Not _imageDone Then
+                    _imageDone = True
+                    For Each it In Items
+                        Try
+                            _image = AlibreCommands.ImageOf(it)
+                        Catch
+                        End Try
+                        If _image IsNot Nothing Then Exit For
+                    Next
+                End If
+                Return _image
+            End Get
+            Set(value As Bitmap)
+                _image = value
+                _imageDone = True
+            End Set
+        End Property
     End Class
 
     Public Module AlibreCommands
 
         ''' <summary>Diagnostics from the last scan (written to the add-on log).</summary>
         Public LastReport As New List(Of String)
+
+        Private _cache As List(Of FoundCommand)
+
+        ''' <summary>Scan once and reuse it while Alibre runs (rescans until a design window has been seen).</summary>
+        Public Function ScanCached() As List(Of FoundCommand)
+            If _cache Is Nothing Then
+                Dim sw = Diagnostics.Stopwatch.StartNew()
+                Dim found = Scan()
+                LastReport.Add("Scan took " & sw.ElapsedMilliseconds & " ms")
+                If found.Count >= 500 Then _cache = found
+                Return found
+            End If
+            LastReport.Clear()
+            LastReport.Add("Using cached command list (" & _cache.Count & " commands)")
+            Return _cache
+        End Function
 
         Public Function Scan() As List(Of FoundCommand)
             LastReport.Clear()
@@ -59,7 +98,7 @@ Namespace KochSpaceMouse
                 Next
             Next
             LastReport.Add("Commands found: " & result.Count & ", with shortcut: " & result.Values.Where(Function(c) c.Shortcut <> "").Count() &
-                           ", with image: " & result.Values.Where(Function(c) c.Image IsNot Nothing).Count())
+                           " (icons are rendered when shown)")
             Return result.Values.OrderBy(Function(c) c.Caption, StringComparer.CurrentCultureIgnoreCase).ToList()
         End Function
 
@@ -173,11 +212,7 @@ Namespace KochSpaceMouse
                         Dim p As String = Nothing
                         If pageOf.TryGetValue(it, p) Then fc.Page = p
                     End If
-                    If fc.Image Is Nothing Then fc.Image = ImageOf(it)
-                    If fc.Image Is Nothing AndAlso fc.Shortcut <> "" AndAlso _imgDiag < 1 Then
-                        _imgDiag += 1
-                        DescribeImage(it, caption)
-                    End If
+                    If fc.Items.Count < 3 Then fc.Items.Add(it)
                 Catch
                 End Try
             Next
@@ -266,7 +301,7 @@ Namespace KochSpaceMouse
             Return ""
         End Function
 
-        Private Function ImageOf(it As Object) As Bitmap
+        Friend Function ImageOf(it As Object) As Bitmap
             ' 1) raster images
             For Each getter In New Func(Of Object)() {
                     Function() it.ImageOptions.LargeImage,
