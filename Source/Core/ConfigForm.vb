@@ -86,7 +86,7 @@ Namespace KochSpaceMouse
                         ' small icon right of the name: linkedin.png in the add-on folder if present, else a generic "open link" glyph
                         Dim tw = TextRenderer.MeasureText(ln, f).Width
                         Dim pic As New PictureBox With {.Size = New Size(17, 14), .Cursor = Cursors.Hand,
-                                                        .Location = New Point(bx + (bw + tw) \ 2 + 2, by + (h - 14) \ 2),
+                                                        .Location = New Point(bx + (bw + tw) \ 2 + 2, by + (h - 14) \ 2 - 2),
                                                         .Image = LinkIcon(14), .SizeMode = PictureBoxSizeMode.Zoom}
                         AddHandler pic.Click, Sub() openLinkedIn(pic, Nothing)
                         brandTip.SetToolTip(pic, "Open LinkedIn")
@@ -95,7 +95,7 @@ Namespace KochSpaceMouse
                         lk.LinkArea = New LinkArea(0, 0)
                 End Select
                 Controls.Add(lk)
-                by += h
+                by += h + 4
             Next
             Controls.Add(title)
 
