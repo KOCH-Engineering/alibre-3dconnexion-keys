@@ -106,6 +106,7 @@ Section "Install"
   File "/oname=LICENSE.txt" "..\LICENSE"
   SetOutPath "$INSTDIR\defaults"
   File "${CORE}\defaults\settings.xml"
+  File "${CORE}\defaults\linkedin.png"
   SetOutPath "$INSTDIR\defaults\icons"
   File "${CORE}\defaults\icons\*.png"
   ; leftovers from development builds

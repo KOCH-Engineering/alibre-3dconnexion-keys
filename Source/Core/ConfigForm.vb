@@ -85,7 +85,7 @@ Namespace KochSpaceMouse
                         brandTip.SetToolTip(lk, "Open LinkedIn")
                         ' small icon right of the name: linkedin.png in the add-on folder if present, else a generic "open link" glyph
                         Dim tw = TextRenderer.MeasureText(ln, f).Width
-                        Dim pic As New PictureBox With {.Size = New Size(14, 14), .Cursor = Cursors.Hand,
+                        Dim pic As New PictureBox With {.Size = New Size(17, 14), .Cursor = Cursors.Hand,
                                                         .Location = New Point(bx + (bw + tw) \ 2 + 2, by + (h - 14) \ 2),
                                                         .Image = LinkIcon(14), .SizeMode = PictureBoxSizeMode.Zoom}
                         AddHandler pic.Click, Sub() openLinkedIn(pic, Nothing)
@@ -305,7 +305,7 @@ Namespace KochSpaceMouse
                 If Not IO.File.Exists(own) Then own = IO.Path.Combine(Plugin.AddOnFolder, "defaults", "linkedin.png")
                 If IO.File.Exists(own) Then
                     Using src = Image.FromFile(own)
-                        Return New Bitmap(src, size, size)
+                        Return New Bitmap(src)      ' the PictureBox zooms it and keeps the aspect ratio
                     End Using
                 End If
             Catch

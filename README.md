@@ -118,4 +118,4 @@ Source/
 
 MIT, © 2026 KOCH Engineering. See [LICENSE](LICENSE).
 
-Alibre and Alibre Design are trademarks of Alibre, LLC. 3Dconnexion, SpaceMouse and 3DxWare are trademarks of 3Dconnexion. This project is not affiliated with or endorsed by either company. Command icons shown in the dialog are read from your own Alibre installation at runtime and are not distributed with this project.
+Alibre and Alibre Design are trademarks of Alibre, LLC. 3Dconnexion, SpaceMouse and 3DxWare are trademarks of 3Dconnexion. LinkedIn and the LinkedIn logo are trademarks of LinkedIn Corporation; the logo is used only as a link to the author's profile. This project is not affiliated with or endorsed by any of these companies. Command icons shown in the dialog are read from your own Alibre installation at runtime and are not distributed with this project.
