@@ -1,4 +1,4 @@
-# Builds and installs the "KOCH SpaceMouse" add-on for Alibre Design (KOCH Engineering).
+# Builds and installs the "KOCH 3Dconnexion Keys" add-on for Alibre Design (KOCH Engineering).
 # Easiest: double-click install.cmd. Requires the .NET SDK.
 #
 # If Alibre Design is running, only the core is updated (no restart needed):
@@ -67,4 +67,4 @@ if (-not (Test-Path $key)) { New-Item -Path $key -Force | Out-Null }
 New-ItemProperty -Path $key -Name $AddOnId -Value $InstallDir -PropertyType String -Force | Out-Null
 
 Write-Host ''
-Write-Host 'Done. Start Alibre Design and click  Add-on > SpaceMouse > SpaceMouse keys...' -ForegroundColor Green
+Write-Host 'Done. Start Alibre Design and click  Add-on > 3Dconnexion > 3Dconnexion keys...' -ForegroundColor Green
