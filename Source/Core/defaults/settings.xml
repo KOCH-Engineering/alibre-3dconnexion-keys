@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SpaceMouse version="1">
+  <AutoSwitch>true</AutoSwitch>
+  <Functions>
+    <Function id="f_boss_extrude" name="Boss Extrude" shortcut="CTRL+ALT+B" category="Part" icon="f_boss_extrude.png" />
+    <Function id="f_cut_extrude" name="Cut Extrude" shortcut="CTRL+ALT+E" category="Part" icon="f_cut_extrude.png" />
+    <Function id="f_fillet" name="Fillet" shortcut="CTRL+ALT+F" category="Part" icon="f_fillet.png" />
+    <Function id="f_chamfer" name="Chamfer" shortcut="CTRL+ALT+H" category="Part" icon="f_chamfer.png" />
+    <Function id="f_regenerate" name="Regenerate All" shortcut="R" category="General" icon="f_regenerate.png" />
+    <Function id="f_toggle_refs" name="Toggle References" shortcut="CTRL+SHIFT+P" category="General" icon="f_toggle_refs.png" />
+    <Function id="f_new_part" name="New Part" shortcut="CTRL+SHIFT+T" category="Assembly" icon="" />
+    <Function id="f_undo" name="Undo" shortcut="CTRL+Z" category="General" icon="" />
+    <Function id="f_redo" name="Redo" shortcut="CTRL+Y" category="General" icon="" />
+    <Function id="f_select_all" name="Select All" shortcut="CTRL+A" category="General" icon="" />
+    <Function id="f_save" name="Save" shortcut="CTRL+S" category="General" icon="" />
+    <Function id="f_copy" name="Copy" shortcut="CTRL+C" category="General" icon="" />
+    <Function id="f_paste" name="Paste" shortcut="CTRL+V" category="General" icon="" />
+    <Function id="f_delete" name="Delete" shortcut="DELETE" category="General" icon="" />
+    <Function id="f_escape" name="Escape" shortcut="ESC" category="General" icon="" />
+    <Function id="f_enter" name="Enter" shortcut="ENTER" category="General" icon="" />
+  </Functions>
+  <Layouts>
+    <Layout context="Part">
+      <Key n="1" function="f_boss_extrude" />
+      <Key n="2" function="f_cut_extrude" />
+      <Key n="3" function="f_fillet" />
+      <Key n="4" function="f_chamfer" />
+      <Key n="5" function="f_regenerate" />
+      <Key n="6" function="f_toggle_refs" />
+      <Key n="7" function="" />
+      <Key n="8" function="" />
+      <Key n="9" function="" />
+      <Key n="10" function="" />
+      <Key n="11" function="" />
+      <Key n="12" function="" />
+    </Layout>
+    <Layout context="Assembly">
+      <Key n="1" function="f_new_part" />
+      <Key n="2" function="" />
+      <Key n="3" function="" />
+      <Key n="4" function="" />
+      <Key n="5" function="f_regenerate" />
+      <Key n="6" function="f_toggle_refs" />
+      <Key n="7" function="" />
+      <Key n="8" function="" />
+      <Key n="9" function="" />
+      <Key n="10" function="" />
+      <Key n="11" function="" />
+      <Key n="12" function="" />
+    </Layout>
+    <Layout context="Sketch">
+      <Key n="1" function="" />
+      <Key n="2" function="" />
+      <Key n="3" function="" />
+      <Key n="4" function="" />
+      <Key n="5" function="f_regenerate" />
+      <Key n="6" function="f_toggle_refs" />
+      <Key n="7" function="" />
+      <Key n="8" function="" />
+      <Key n="9" function="" />
+      <Key n="10" function="" />
+      <Key n="11" function="" />
+      <Key n="12" function="" />
+    </Layout>
+    <Layout context="Drawing">
+      <Key n="1" function="" />
+      <Key n="2" function="" />
+      <Key n="3" function="" />
+      <Key n="4" function="" />
+      <Key n="5" function="" />
+      <Key n="6" function="" />
+      <Key n="7" function="" />
+      <Key n="8" function="" />
+      <Key n="9" function="" />
+      <Key n="10" function="" />
+      <Key n="11" function="" />
+      <Key n="12" function="" />
+    </Layout>
+  </Layouts>
+</SpaceMouse>

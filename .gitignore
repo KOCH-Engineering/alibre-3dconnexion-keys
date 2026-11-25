@@ -1,0 +1,12 @@
+bin/
+obj/
+*.user
+*.suo
+.vs/
+install.log
+uninstall.log
+*.zip
+# test harness / scratch
+test/
+dlg_screen.png
+picker.png

@@ -1,0 +1,20 @@
+# Changelog
+
+## 0.6.0 – 2026-11-25
+- Keyboard Pro support: 12 macro keys (3 groups of 4), with their own layout per context and icons in the preview.
+- Device selector that shows only the 3Dconnexion devices 3DxWare knows about.
+- "KOCH Engineering" link in the dialog (Henrik J. Koch, Denmark).
+- New add-on icon.
+- `uninstall.cmd`.
+
+## 0.5.0
+- Searchable key picker: type part of a name, use the arrow keys and Enter.
+- Functions already used on another key are highlighted.
+
+## 0.4.x
+- Reads all ~1,300 Alibre ribbon commands with their real (SVG) icons and shortcuts.
+- Clicking a key in the preview opens its picker; red key numbers; two-column layout.
+- Hot reload: "Reload add-on" loads a new core without restarting Alibre.
+
+## 0.3.0
+- First working version: writes names, icons and shortcut macros to the 3DxWare Alibre profile, and switches automatically between Part, Assembly, Sketch and Drawing.
