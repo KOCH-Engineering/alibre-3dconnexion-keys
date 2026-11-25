@@ -10,6 +10,8 @@ This guide covers everything in the **3Dconnexion keys** dialog. For installatio
 
 In Alibre Design, choose **Add-on → 3Dconnexion → 3Dconnexion keys…**
 
+![Add-on tab](ribbon.png)
+
 The **3Dconnexion** menu has two entries:
 
 | Entry | What it does |
@@ -29,6 +31,8 @@ The **3Dconnexion** menu has two entries:
 ### 2.0 Header
 
 At the top right you'll find who made the add-on: **KOCH Engineering** (click it to open the *About* window with the version number and a link to the source code), **Henrik J. Koch** with a LinkedIn link, and **Denmark © 2026**.
+
+<img src="about.png" width="300" alt="About window">
 
 ### 2.1 Context tabs: Part · Assembly · Sketch · Drawing
 

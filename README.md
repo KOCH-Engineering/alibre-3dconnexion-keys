@@ -36,6 +36,8 @@ Alibre Design has no native 3Dconnexion integration for these keys, so the add-o
 2. Close Alibre Design and run `KOCH-3Dconnexion-Keys-Setup-x.y.z.exe` (Yes / Next / I Agree / Finish).
 3. Start Alibre Design and click **Add-on → 3Dconnexion → 3Dconnexion keys…**
 
+![Add-on tab](docs/ribbon.png)
+
 The installer is not code-signed, so Windows SmartScreen may say *"Windows protected your PC"*: click **More info → Run anyway**.
 
 **Uninstall** from **Windows Settings → Apps → KOCH 3Dconnexion Keys (Alibre add-on)**. The keys go back to the 3DxWare defaults; your own settings are kept.
