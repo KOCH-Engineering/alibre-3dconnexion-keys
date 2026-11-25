@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.6.2 – 2026-11-25
-- Credits always visible at the top right of the dialog: KOCH Engineering · Henrik J. Koch · Denmark · © 2026 (links to LinkedIn and the About window).
+- Credits always visible at the top right of the dialog: **KOCH Engineering** (opens About) · Henrik J. Koch (LinkedIn) · Denmark © 2026.
 - Faster dialog: Alibre's command list is read once in the background after start-up and reused; icons are only rendered when they are shown.
 
 ## 0.6.1 – 2026-11-25

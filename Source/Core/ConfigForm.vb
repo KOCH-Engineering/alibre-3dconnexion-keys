@@ -64,25 +64,28 @@ Namespace KochSpaceMouse
                     Catch
                     End Try
                 End Sub
-            For Each ln In {"KOCH Engineering", "Henrik J. Koch", "Denmark", "© 2026 · About"}
-                Dim f = If(ln = "KOCH Engineering", New Font("Segoe UI", 9.0F, FontStyle.Bold), New Font("Segoe UI", 8.25F))
+            For Each ln In {"KOCH Engineering", "Henrik J. Koch", "Denmark © 2026"}
+                Dim bold = (ln = "KOCH Engineering")
+                Dim f = If(bold, New Font("Segoe UI", 9.0F, FontStyle.Bold), New Font("Segoe UI", 8.25F))
                 Dim h = TextRenderer.MeasureText(ln, f).Height
                 Dim lk As New LinkLabel With {.Text = ln, .Font = f, .AutoSize = False, .TextAlign = ContentAlignment.MiddleCenter,
                                               .Location = New Point(bx, by), .Size = New Size(bw, h), .LinkBehavior = LinkBehavior.HoverUnderline,
-                                              .LinkColor = If(ln = "KOCH Engineering", Accent, Color.Gray), .ActiveLinkColor = Accent}
-                If ln = "Denmark" Then lk.LinkArea = New LinkArea(0, 0)
-                If ln.StartsWith("©") Then
-                    lk.LinkArea = New LinkArea(ln.IndexOf("About"), 5)
-                    AddHandler lk.LinkClicked, Sub()
-                                                   Using ab As New AboutForm()
-                                                       ab.ShowDialog(Me)
-                                                   End Using
-                                               End Sub
-                ElseIf ln <> "Denmark" Then
-                    AddHandler lk.LinkClicked, openLinkedIn
-                    brandTip.SetToolTip(lk, "Open LinkedIn")
-                End If
-                lk.ForeColor = Color.Gray
+                                              .LinkColor = If(bold, Color.FromArgb(&H33, &H33, &H33), Accent), .ActiveLinkColor = Accent,
+                                              .ForeColor = Color.Gray}
+                Select Case ln
+                    Case "KOCH Engineering"
+                        AddHandler lk.LinkClicked, Sub()
+                                                       Using ab As New AboutForm()
+                                                           ab.ShowDialog(Me)
+                                                       End Using
+                                                   End Sub
+                        brandTip.SetToolTip(lk, "About KOCH 3Dconnexion Keys")
+                    Case "Henrik J. Koch"
+                        AddHandler lk.LinkClicked, openLinkedIn
+                        brandTip.SetToolTip(lk, "Open LinkedIn")
+                    Case Else
+                        lk.LinkArea = New LinkArea(0, 0)
+                End Select
                 Controls.Add(lk)
                 by += h
             Next
