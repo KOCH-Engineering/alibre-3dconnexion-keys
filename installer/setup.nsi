@@ -35,7 +35,7 @@ VIAddVersionKey "Comments" "Developed by ${PUBLISHER} (Henrik J. Koch, Denmark)"
 !define MUI_UNICON "${LOADER}\SpaceMouse.ico"
 !define MUI_ABORTWARNING
 !define MUI_WELCOMEPAGE_TITLE "KOCH 3Dconnexion Keys for Alibre Design"
-!define MUI_WELCOMEPAGE_TEXT "Developed by KOCH Engineering (Henrik J. Koch, Denmark) - with a lot of help from Claude (Anthropic).$\r$\n$\r$\nChoose what the 12 LCD keys of a 3Dconnexion SpaceMouse Enterprise and the 12 keys of a Keyboard Pro do in Alibre Design - with names, icons and one layout per Part, Assembly, Sketch and Drawing.$\r$\n$\r$\nRequires Alibre Design (64-bit) and 3Dconnexion 3DxWare 10.$\r$\n$\r$\nPlease close Alibre Design before you continue."
+!define MUI_WELCOMEPAGE_TEXT "KOCH Engineering - Henrik J. Koch - Denmark - © 2026$\r$\nWith a lot of help from Claude (Anthropic).$\r$\n$\r$\nChoose what the 12 LCD keys of a 3Dconnexion SpaceMouse Enterprise and the 12 keys of a Keyboard Pro do in Alibre Design - with names, icons and one layout per Part, Assembly, Sketch and Drawing.$\r$\n$\r$\nRequires Alibre Design (64-bit) and 3Dconnexion 3DxWare 10.$\r$\n$\r$\nPlease close Alibre Design before you continue."
 !define MUI_FINISHPAGE_TEXT "KOCH 3Dconnexion Keys is installed. Thank you for using a tool from KOCH Engineering.$\r$\n$\r$\nStart Alibre Design and click Add-on > 3Dconnexion > 3Dconnexion keys..."
 !define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\README.txt"
 !define MUI_FINISHPAGE_SHOWREADME_TEXT "Show README"

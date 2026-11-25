@@ -19,6 +19,8 @@ Namespace KochSpaceMouse
         Private _settings As Settings
         Private _applied As String = ""
 
+        Public Shared Property AddOnFolder As String = ""
+
         Public Shared ReadOnly Property Version As String
             Get
                 Return GetType(Plugin).Assembly.GetName().Version.ToString()
@@ -28,6 +30,7 @@ Namespace KochSpaceMouse
         ''' <param name="getContext">Returns "Part", "Assembly", "Sketch", "Drawing" or "" for the active Alibre window.</param>
         Public Sub New(installFolder As String, getContext As Func(Of String), log As Action(Of String))
             _installFolder = installFolder
+            AddOnFolder = installFolder
             _getContext = getContext
             _log = log
             Diag.Log = log

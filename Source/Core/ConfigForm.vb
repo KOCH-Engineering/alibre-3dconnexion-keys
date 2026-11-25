@@ -56,12 +56,11 @@ Namespace KochSpaceMouse
                                              .LinkColor = Color.Gray, .ActiveLinkColor = Accent}
             brand.Location = New Point(ClientSize.Width - 20 - TextRenderer.MeasureText(brand.Text, Font).Width, 18)
             Dim brandTip As New ToolTip()
-            brandTip.SetToolTip(brand, "KOCH Engineering · Henrik J. Koch · Denmark" & vbCrLf & "Click to open LinkedIn")
+            brandTip.SetToolTip(brand, "KOCH Engineering · Henrik J. Koch · Denmark" & vbCrLf & "Click for more")
             AddHandler brand.LinkClicked, Sub()
-                                              Try
-                                                  Diagnostics.Process.Start("https://www.linkedin.com/in/henrikjkoch/")
-                                              Catch
-                                              End Try
+                                              Using a As New AboutForm()
+                                                  a.ShowDialog(Me)
+                                              End Using
                                           End Sub
             Controls.Add(title)
             Controls.Add(brand)
