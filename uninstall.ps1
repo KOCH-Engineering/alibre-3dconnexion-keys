@@ -4,7 +4,7 @@ $ErrorActionPreference = 'Stop'
 $AddOnId    = '{C79D2D04-31E5-4887-83CC-6B2F46C2E768}'
 $InstallDir = Join-Path $env:ProgramData 'Alibre AddOns\KochSpaceMouse'
 
-if (Get-Process -Name 'AlibreDesign' -ErrorAction SilentlyContinue) { throw 'Close Alibre Design first.' }
+if (Get-Process -Name 'Alibre Design' -ErrorAction SilentlyContinue) { throw 'Close Alibre Design first.' }
 
 $key = 'HKLM:\SOFTWARE\Alibre Design Add-Ons'
 if (Get-ItemProperty -Path $key -Name $AddOnId -ErrorAction SilentlyContinue) {
