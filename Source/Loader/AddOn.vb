@@ -68,7 +68,7 @@ Namespace AlibreAddOnAssembly
             Try
                 Dim file = Path.Combine(_folder, "KochSpaceMouse.Core.dll")
                 Dim asm = Assembly.Load(IO.File.ReadAllBytes(file))
-                _coreVersion = asm.GetName().Version.ToString()
+                _coreVersion = asm.GetName().Version.ToString(3)
                 Dim t = asm.GetType("KochSpaceMouse.Plugin", True)
                 Dim getContext As Func(Of String) = AddressOf CurrentContext
                 Dim logIt As Action(Of String) = AddressOf Log.Write
