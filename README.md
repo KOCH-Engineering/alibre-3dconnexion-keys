@@ -4,6 +4,8 @@
 
 **Developed by [KOCH Engineering](https://www.linkedin.com/in/henrikjkoch/) (Henrik J. Koch, Denmark), with a lot of help from Claude (Anthropic).**
 
+💬 **Questions, ideas or bugs?** Join the discussion in the [Alibre forum](https://www.alibre.com/forum/index.php?threads/three-free-add-ons-for-alibre-design-%E2%80%93-export-parts-send-to-prusaslicer-3dconnexion-keys.27260/) or open a GitHub issue.
+
 With this Alibre Design add-on you choose what the **12 LCD keys of a 3Dconnexion SpaceMouse Enterprise** and the **12 macro keys of a 3Dconnexion Keyboard Pro** do. Each key gets a name and an icon, the way SOLIDWORKS users already have it. Part, Assembly, Sketch and Drawing each get their own layout, and the keys **switch automatically** when you move between them in Alibre.
 
 Alibre Design has no native 3Dconnexion integration for these keys, so the add-on adds one.
