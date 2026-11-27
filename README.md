@@ -1,3 +1,5 @@
+![banner](docs/banner.png)
+
 # KOCH 3Dconnexion Keys – SpaceMouse & Keyboard Pro keys for Alibre Design
 
 **Developed by [KOCH Engineering](https://www.linkedin.com/in/henrikjkoch/) (Henrik J. Koch, Denmark), with a lot of help from Claude (Anthropic).**
