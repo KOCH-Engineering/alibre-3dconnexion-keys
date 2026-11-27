@@ -1,4 +1,4 @@
-' KOCH 3Dconnexion Keys - About window (KOCH Engineering, Henrik J. Koch, Denmark)
+' KOCH 3Dconnexion Keys - About window (KOCH Engineering, Henrik J. Koch, Denmark) - common to all KOCH add-ons
 Imports System.Drawing
 Imports System.Windows.Forms
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.3 – 2026-11-27
+- **About…** in the menu, the same in all KOCH Engineering add-ons.
+- The version is shown with three digits.
+
 ## 0.6.2 – 2026-11-25
 - Credits always visible at the top right of the dialog: **KOCH Engineering** (opens About) · Henrik J. Koch (LinkedIn) · Denmark © 2026.
 - Faster dialog: Alibre's command list is read once in the background after start-up and reused; icons are only rendered when they are shown.

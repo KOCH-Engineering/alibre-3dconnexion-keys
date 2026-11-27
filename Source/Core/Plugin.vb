@@ -88,6 +88,12 @@ Namespace KochSpaceMouse
             End Try
         End Sub
 
+        Public Sub ShowAbout(owner As IWin32Window)
+            Using f As New AboutForm()
+                f.ShowDialog(owner)
+            End Using
+        End Sub
+
         Public Sub ShowConfig(owner As IWin32Window)
             Dim ctx = ""
             Try

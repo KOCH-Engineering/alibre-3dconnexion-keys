@@ -48,6 +48,7 @@ Namespace AlibreAddOnAssembly
         Private Const ROOT_ID As Integer = 5800
         Private Const CMD_CONFIG As Integer = 5801
         Private Const CMD_RELOAD As Integer = 5802
+        Private Const CMD_ABOUT As Integer = 5803
 
         Private ReadOnly _root As IADRoot
         Private ReadOnly _hwnd As IntPtr
@@ -142,13 +143,14 @@ Namespace AlibreAddOnAssembly
 
         Public Function SubMenuItems(menuId As Integer) As Array Implements IAlibreAddOn.SubMenuItems
             If menuId <> ROOT_ID Then Return Nothing
-            Return New Integer() {CMD_CONFIG, CMD_RELOAD}
+            Return New Integer() {CMD_CONFIG, CMD_ABOUT, CMD_RELOAD}
         End Function
 
         Public Function MenuItemText(menuId As Integer) As String Implements IAlibreAddOn.MenuItemText
             Select Case menuId
                 Case ROOT_ID : Return "3Dconnexion"
                 Case CMD_CONFIG : Return "3Dconnexion keys…"
+                Case CMD_ABOUT : Return "About…"
                 Case CMD_RELOAD : Return "Reload add-on"
                 Case Else : Return String.Empty
             End Select
@@ -157,6 +159,7 @@ Namespace AlibreAddOnAssembly
         Public Function MenuItemToolTip(menuId As Integer) As String Implements IAlibreAddOn.MenuItemToolTip
             Select Case menuId
                 Case CMD_CONFIG : Return "Choose the functions on the keys of your SpaceMouse Enterprise and Keyboard Pro"
+                Case CMD_ABOUT : Return "KOCH Engineering · Henrik J. Koch · Denmark"
                 Case CMD_RELOAD : Return "Load a newly installed version without restarting Alibre Design"
                 Case Else : Return "KOCH 3Dconnexion Keys"
             End Select
@@ -179,10 +182,12 @@ Namespace AlibreAddOnAssembly
             Dim owner As IWin32Window = New AlibreWindow(_hwnd)
             Try
                 Select Case menuId
-                    Case CMD_CONFIG
+                    Case CMD_CONFIG, CMD_ABOUT
                         If _core Is Nothing Then LoadCore()
                         If _core Is Nothing Then
                             MessageBox.Show(owner, "The 3Dconnexion keys add-on could not start. See the log:" & vbCrLf & Log.FilePath, "3Dconnexion keys")
+                        ElseIf menuId = CMD_ABOUT Then
+                            _core.ShowAbout(owner)
                         Else
                             _core.ShowConfig(owner)
                         End If
