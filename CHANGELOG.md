@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.4 – 2026-11-28
+- **Every function now goes through the add-on**, also those with a shortcut. The add-on clicks the command in Alibre's ribbon of the active window (found by command, name or shortcut); a command that is not in the ribbon (e.g. an Alibre Script shortcut) is typed as its shortcut.
+- **Feedback instead of silence:** if the command is greyed out or not in this window (e.g. Boss Extrude in an assembly sketch), you hear a beep and see a short message at the mouse pointer.
+- Works from the radial menu too: the invisible keys are caught even when 3Dconnexion's menu window has the focus.
+- In the function lists, commands for the selected tab (and general ones) come first; commands for another window type are marked, e.g. *(Part)*. They can still be chosen.
+
 ## 0.7.3 – 2026-11-28
 - The selected context tab (Part, Assembly, Sketch, Drawing) stays highlighted when you choose a device.
 

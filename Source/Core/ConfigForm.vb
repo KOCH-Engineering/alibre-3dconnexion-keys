@@ -291,13 +291,19 @@ Namespace KochSpaceMouse
             End Using
             Dim noKey = String.IsNullOrWhiteSpace(f.Shortcut)
             Dim right = If(noKey, If(Runnable(f), "run by add-on", "(not found)"), f.Shortcut)
-            If usedOn >= 0 Then right = "key " & (usedOn + 1) & "  ·  " & right
+            If OtherContext(f) Then right = "(" & f.Category & ")  ·  " & right
+            If usedOn >= 0 Then right = If(RadialMode, "slot ", "key ") & (usedOn + 1) & "  ·  " & right
             Dim rw = TextRenderer.MeasureText(right, fnt).Width + 6
             TextRenderer.DrawText(g, f.Name, fnt, New Rectangle(r.X + 26, r.Y, r.Width - 26 - rw, r.Height),
                                   If(noKey AndAlso Not Runnable(f), dim_, fore), TextFormatFlags.VerticalCenter Or TextFormatFlags.Left Or TextFormatFlags.EndEllipsis)
             TextRenderer.DrawText(g, right, fnt, New Rectangle(r.Right - rw, r.Y, rw - 2, r.Height), dim_,
                                   TextFormatFlags.VerticalCenter Or TextFormatFlags.Right)
         End Sub
+
+        ' A Part command in the Assembly list etc. - still allowed (e.g. editing a part inside an assembly), only marked
+        Friend Function OtherContext(f As KeyFunction) As Boolean
+            Return f.Category <> "General" AndAlso f.Category <> "" AndAlso f.Category <> _context
+        End Function
 
         Private _captions As HashSet(Of String)
 
@@ -413,8 +419,8 @@ Namespace KochSpaceMouse
             Dim items As New List(Of Object) From {DefaultItem}
             Dim all As New List(Of KeyFunction)(_settings.Functions)
             all.AddRange(_alibre)
-            ' functions with a shortcut first, then alphabetical
-            items.AddRange(all.OrderBy(Function(f) If(String.IsNullOrWhiteSpace(f.Shortcut), 1, 0)) _
+            ' functions for this context (and general ones) first, then the rest; alphabetical within each group
+            items.AddRange(all.OrderBy(Function(f) If(OtherContext(f), 1, 0)) _
                               .ThenBy(Function(f) f.Name, StringComparer.CurrentCultureIgnoreCase))
             _previewLabel.Text = {"LCD preview (click a key to edit it)",
                                   "Keyboard Pro keys - no display on the keyboard, the icons are for your overview (click a key to edit it)",

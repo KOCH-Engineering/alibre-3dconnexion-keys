@@ -69,6 +69,7 @@ Namespace KochSpaceMouse
                     End Try
                 End If
             End If
+            If ctx <> "" Then _runner.Track(Form.ActiveForm)
             If Not _settings.AutoSwitch Then Return
             If ctx = "" OrElse ctx = _applied Then Return
             Apply(ctx)
@@ -77,14 +78,15 @@ Namespace KochSpaceMouse
         Private Sub UpdateRunner()
             _hidden = _settings.HiddenKeys()
             _runner.SetMap(_settings, _hidden)
-            If _hidden.Count > 0 Then _log(_hidden.Count & " functions without a shortcut are run by the add-on")
+            If _hidden.Count > 0 Then _log(_hidden.Count & " functions are run by the add-on")
         End Sub
 
         ''' <summary>The function as 3DxWare should send it: its own shortcut, or its invisible key.</summary>
         Private Function Effective(f As KeyFunction) As KeyFunction
-            If f Is Nothing OrElse Not String.IsNullOrWhiteSpace(f.Shortcut) Then Return f
+            If f Is Nothing Then Return f
             Dim hk As String = Nothing
             If Not _hidden.TryGetValue(f.Id, hk) Then Return f
+            ' Shortcut = what 3DxWare sends (the invisible key); the runner still knows the real shortcut from the catalog
             Return New KeyFunction With {.Id = f.Id, .Name = f.Name, .Shortcut = hk, .Category = f.Category,
                                          .Icon = f.Icon, .Command = f.Command}
         End Function
@@ -143,6 +145,7 @@ Namespace KochSpaceMouse
             _timer.Stop()
             _timer.Dispose()
             Application.RemoveMessageFilter(_runner)
+            _runner.Remove()
         End Sub
     End Class
 

@@ -81,14 +81,16 @@ Namespace KochSpaceMouse
             Return l
         End Function
 
-        ''' <summary>Invisible keys (F13-F24 with Ctrl/Shift/Alt) for the functions on keys and menus that have no
-        ''' shortcut: 3DxWare sends that key, the add-on catches it inside Alibre and clicks the ribbon command.
-        ''' Function id -> key text, e.g. "CTRL+F14". Up to 96 functions.</summary>
+        ''' <summary>Invisible keys (F13-F24 with Ctrl/Shift/Alt) for the functions on keys and menus: 3DxWare sends
+        ''' that key, the add-on catches it inside Alibre and clicks the ribbon command (or types the shortcut if
+        ''' the command is not in the ribbon), and says so when the command is not available in that window.
+        ''' Function id -> key text, e.g. "CTRL+F14". Up to 96 functions; the rest send their shortcut directly.</summary>
         Public Function HiddenKeys() As Dictionary(Of String, String)
             Dim mods = {"", "CTRL+", "SHIFT+", "ALT+", "CTRL+SHIFT+", "CTRL+ALT+", "ALT+SHIFT+", "CTRL+ALT+SHIFT+"}
             Dim ids = Contexts.AllLayoutKeys().SelectMany(Function(c) Layout(c)).Where(Function(id) id <> "").Distinct() _
-                      .Select(Function(id) Find(id)).Where(Function(f) f IsNot Nothing AndAlso String.IsNullOrWhiteSpace(f.Shortcut)) _
-                      .Select(Function(f) f.Id).OrderBy(Function(id) id, StringComparer.Ordinal).ToList()
+                      .Select(Function(id) Find(id)).Where(Function(f) f IsNot Nothing) _
+                      .OrderBy(Function(f) If(String.IsNullOrWhiteSpace(f.Shortcut), 0, 1)).ThenBy(Function(f) f.Id, StringComparer.Ordinal) _
+                      .Select(Function(f) f.Id).ToList()
             Dim map As New Dictionary(Of String, String)
             For k = 0 To Math.Min(ids.Count, mods.Length * 12) - 1
                 map(ids(k)) = mods(k \ 12) & "F" & (13 + k Mod 12)

@@ -480,16 +480,17 @@ Namespace KochSpaceMouse
         ' ---------------------------------------------------------------- run a command
 
         ' per window: command name -> ribbon item, and caption -> ribbon item
-        Private ReadOnly _itemsByForm As New Dictionary(Of Form, Tuple(Of Dictionary(Of String, Object), Dictionary(Of String, Object)))
+        Private ReadOnly _itemsByForm As New Dictionary(Of Form, Tuple(Of Dictionary(Of String, Object), Dictionary(Of String, Object), Dictionary(Of String, Object)))
 
-        ''' <summary>The ribbon item of this window for a command (by its name, else by its caption).</summary>
-        Public Function FindItem(form As Form, command As String, caption As String) As Object
+        ''' <summary>The ribbon item of this window for a command: by its name, else its caption, else its shortcut.</summary>
+        Public Function FindItem(form As Form, command As String, caption As String, shortcut As String) As Object
             For Each dead In _itemsByForm.Keys.Where(Function(f) f.IsDisposed).ToList()
                 _itemsByForm.Remove(dead)
             Next
-            Dim maps As Tuple(Of Dictionary(Of String, Object), Dictionary(Of String, Object)) = Nothing
+            Dim maps As Tuple(Of Dictionary(Of String, Object), Dictionary(Of String, Object), Dictionary(Of String, Object)) = Nothing
             If Not _itemsByForm.TryGetValue(form, maps) Then
                 maps = Tuple.Create(New Dictionary(Of String, Object)(StringComparer.OrdinalIgnoreCase),
+                                    New Dictionary(Of String, Object)(StringComparer.OrdinalIgnoreCase),
                                     New Dictionary(Of String, Object)(StringComparer.OrdinalIgnoreCase))
                 Dim ribbons As New List(Of Object)
                 FindRibbons(form, ribbons, 0)
@@ -512,6 +513,9 @@ Namespace KochSpaceMouse
                                     cap = cap.Replace("&", "").Trim()
                                     If Not maps.Item2.ContainsKey(cap) Then maps.Item2(cap) = it
                                 End If
+                                Dim sc = ShortcutOf(it)
+                                If sc = "" Then sc = ShortcutFromHint(it)
+                                If sc <> "" AndAlso Not maps.Item3.ContainsKey(sc) Then maps.Item3(sc) = it
                             Catch
                             End Try
                         Next
@@ -523,6 +527,7 @@ Namespace KochSpaceMouse
             Dim found As Object = Nothing
             If Not String.IsNullOrEmpty(command) AndAlso maps.Item1.TryGetValue(command, found) Then Return found
             If Not String.IsNullOrEmpty(caption) AndAlso maps.Item2.TryGetValue(caption.Trim(), found) Then Return found
+            If Not String.IsNullOrEmpty(shortcut) AndAlso maps.Item3.TryGetValue(shortcut.Trim().ToUpperInvariant(), found) Then Return found
             Return Nothing
         End Function
 

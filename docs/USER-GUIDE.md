@@ -171,7 +171,7 @@ The add-on writes the macros, button actions and key assignments for you (see th
 | Symptom | What to try |
 |---|---|
 | The LCD shows the 3DxWare defaults or "Desktop" | Click in the Alibre window so it has focus. Check that 3DxWare shows the *Alibre Design* profile. If 3DxWare got stuck, restart the 3DxWare service or the PC. |
-| A key shows the right name but does nothing | A *run by add-on* command only works in a window whose ribbon has it (e.g. Fillet in a part, not in a drawing), and only when it is enabled there; you hear a beep otherwise. For a function with a shortcut: the shortcut must be the same as Alibre's (section 3.2). |
+| A key shows the right name but does nothing | Look at the mouse pointer: a short message says when the command is greyed out or not in this window (e.g. Boss Extrude on an assembly-level sketch). Commands only work where Alibre allows them. If there is no message at all, check `C:\ProgramData\Alibre AddOns\KochSpaceMouse\addon.log`. For a function with a shortcut: the shortcut must be the same as Alibre's (section 3.2). |
 | The MENU button still shows 3DxWare's own menu | Fill at least one slot in **Radial menu** for this context and click **Save to devices**. If it still doesn't change, restart 3DxWare. |
 | The keys don't follow Part/Assembly/Sketch | Make sure **Switch layout automatically** is ticked and click **Save to devices** once. |
 | The command list is short or has no icons | Open a part *and* an assembly window first (the add-on reads the ribbons of open windows), then reopen the dialog. |
