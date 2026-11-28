@@ -16,6 +16,7 @@ Alibre Design has no native 3Dconnexion integration for these keys, so the add-o
 
 - **12 LCD keys** on the SpaceMouse Enterprise, each with a name and an icon on the display.
 - **12 macro keys** on the Keyboard Pro, shown as three groups of four. The keyboard has no display, but the dialog still shows icons, so you can see what is mapped where.
+- **Radial menu for every SpaceMouse** – also the two-button SpaceMouse Compact. Eight functions around the cursor, opened with the MENU button (left button on the Compact, MENU key on Pro and Enterprise). Idea by HaroldL.
 - **Four layouts per device:** Part, Assembly, Sketch and Drawing. The add-on follows the active Alibre window and updates the keys within about half a second.
 - **No manual macros.** The add-on creates the 3DxWare macros, button actions (name + icon) and key assignments for you – nothing to set up in the 3Dconnexion app.
 - **Every Alibre command in one list.** The add-on reads Alibre's ribbon at runtime, roughly 1,300 commands with their real Alibre icons.
@@ -30,7 +31,7 @@ Alibre Design has no native 3Dconnexion integration for these keys, so the add-o
 | | |
 |---|---|
 | CAD | Alibre Design Professional or Expert, 64-bit (tested with version 29) |
-| Hardware | 3Dconnexion **SpaceMouse Enterprise** and/or **Keyboard Pro** (others may work for the keys they share) |
+| Hardware | 3Dconnexion **SpaceMouse Enterprise** and/or **Keyboard Pro** for the keys; **any SpaceMouse** (Compact, Wireless, Pro, Enterprise) for the radial menu |
 | Driver | **3DxWare 10** with the Alibre Design profile, which 3DxWare installs automatically when Alibre is detected |
 | Windows | Windows 10/11, .NET Framework 4.8 |
 

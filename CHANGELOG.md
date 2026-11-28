@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0 – 2026-11-28
+- **Radial menu** for every SpaceMouse, also the SpaceMouse Compact (idea: HaroldL). A third choice next to SpaceMouse Enterprise and Keyboard Pro: 8 functions around the cursor, opened with the MENU button (left button on the Compact, MENU key on Pro/Enterprise). One menu per context (Part, Assembly, Sketch, Drawing), and it follows the active Alibre window like the keys.
+- If no slot is filled, the MENU button keeps 3DxWare's own menu.
+
 ## 0.6.3 – 2026-11-27
 - **About…** in the menu, the same in all KOCH Engineering add-ons.
 - The version is shown with three digits.

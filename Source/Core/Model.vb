@@ -28,10 +28,14 @@ Namespace KochSpaceMouse
         Public ReadOnly All As String() = {"Part", "Assembly", "Sketch", "Drawing"}
         Public Const KeyCount As Integer = 12
         Public Const KeyboardSuffix As String = "|Keyboard"
+        ''' <summary>Radial menu on the MENU button of any SpaceMouse (Compact, Wireless, Pro, Enterprise).</summary>
+        Public Const RadialSuffix As String = "|Radial"
+        Public Const RadialSlots As Integer = 8
 
-        ''' <summary>Layout keys: "Part" ... for the SpaceMouse and "Part|Keyboard" ... for the Keyboard Pro.</summary>
+        ''' <summary>Layout keys: "Part" ... for the SpaceMouse, "Part|Keyboard" ... for the Keyboard Pro
+        ''' and "Part|Radial" ... for the radial menu (12 slots stored, the first 8 used).</summary>
         Public Function AllLayoutKeys() As String()
-            Return All.Concat(All.Select(Function(c) c & KeyboardSuffix)).ToArray()
+            Return All.Concat(All.Select(Function(c) c & KeyboardSuffix)).Concat(All.Select(Function(c) c & RadialSuffix)).ToArray()
         End Function
     End Module
 

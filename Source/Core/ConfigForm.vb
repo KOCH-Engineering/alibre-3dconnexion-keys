@@ -16,7 +16,8 @@ Namespace KochSpaceMouse
         Private ReadOnly _settings As Settings
         Private _context As String
         Private _selected As Integer = 0
-        Private _keyboard As Boolean          ' False = SpaceMouse Enterprise, True = Keyboard Pro
+        Private _device As Integer            ' 0 = SpaceMouse Enterprise LCD keys, 1 = Keyboard Pro, 2 = radial menu
+        Private _rowsLabel As Label
         Private ReadOnly _previewLabel As Label
 
         Private ReadOnly _tabs As New List(Of RadioButton)
@@ -113,21 +114,26 @@ Namespace KochSpaceMouse
                 x += 100
             Next
 
-            ' device selector (only the devices 3DxWare knows)
+            ' device selector: the LCD keys / keyboard only when 3DxWare knows the device, the radial menu always
+            ' (it works on every SpaceMouse, also the Compact that has only two buttons)
             Dim hasMouse, hasKeyboard As Boolean
             DxWareProfile.DetectDevices(hasMouse, hasKeyboard)
-            If Not hasMouse AndAlso Not hasKeyboard Then hasMouse = True : hasKeyboard = True
-            _keyboard = Not hasMouse
+            Dim unknown = Not hasMouse AndAlso Not hasKeyboard
+            If unknown Then hasMouse = True : hasKeyboard = True
+            _device = If(unknown, 2, If(hasMouse, 0, 1))
+            Dim devTip As New ToolTip()
             Dim dx = 20
-            For Each dev In {"SpaceMouse Enterprise", "Keyboard Pro"}
-                Dim isKb = (dev = "Keyboard Pro")
-                If (isKb AndAlso Not hasKeyboard) OrElse (Not isKb AndAlso Not hasMouse) Then Continue For
-                Dim rb As New RadioButton With {.Text = dev, .Appearance = Appearance.Button, .FlatStyle = FlatStyle.Flat,
+            For d = 0 To 2
+                If (d = 0 AndAlso Not hasMouse) OrElse (d = 1 AndAlso Not hasKeyboard) Then Continue For
+                Dim rb As New RadioButton With {.Text = {"SpaceMouse Enterprise", "Keyboard Pro", "Radial menu"}(d),
+                                                .Appearance = Appearance.Button, .FlatStyle = FlatStyle.Flat,
                                                 .TextAlign = ContentAlignment.MiddleCenter, .Size = New Size(160, 26),
-                                                .Location = New Point(dx, 90), .Tag = isKb, .Checked = (isKb = _keyboard)}
+                                                .Location = New Point(dx, 90), .Tag = d, .Checked = (d = _device)}
                 rb.FlatAppearance.BorderColor = Color.Silver
                 rb.FlatAppearance.CheckedBackColor = AccentBg
                 AddHandler rb.CheckedChanged, AddressOf OnDevice
+                If d = 2 Then devTip.SetToolTip(rb, "8 functions around the cursor, opened with the MENU button of any SpaceMouse" & vbCrLf &
+                                                    "(left button on the SpaceMouse Compact, MENU key on Pro and Enterprise)")
                 Controls.Add(rb)
                 dx += 164
             Next
@@ -139,12 +145,11 @@ Namespace KochSpaceMouse
             Controls.Add(_lcd)
 
             ' 12 rows in two columns: keys 1-6 left, 7-12 right
-            Controls.Add(New Label With {.Text = "Function per key", .ForeColor = Color.DimGray,
-                                         .Location = New Point(20, 308), .AutoSize = True})
+            _rowsLabel = New Label With {.Text = "Function per key", .ForeColor = Color.DimGray,
+                                         .Location = New Point(20, 308), .AutoSize = True}
+            Controls.Add(_rowsLabel)
             For i = 0 To Contexts.KeyCount - 1
-                Dim col = If(i < 6, 0, 1)
-                Dim rowIx = i Mod 6
-                Dim row As New Panel With {.Location = New Point(20 + col * 364, 328 + rowIx * 38), .Size = New Size(356, 36)}
+                Dim row As New Panel With {.Size = New Size(356, 36)}
                 Dim lbl As New Label With {.Text = "Key", .Location = New Point(4, 10), .AutoSize = True, .ForeColor = Color.DimGray}
                 Dim num As New Label With {.Text = CStr(i + 1), .Location = New Point(30, 10), .AutoSize = True,
                                            .ForeColor = Red, .Font = New Font(Font, FontStyle.Bold)}
@@ -325,22 +330,50 @@ Namespace KochSpaceMouse
 
         Friend ReadOnly Property CurrentLayout As String()
             Get
-                Return _settings.Layout(If(_keyboard, _context & Contexts.KeyboardSuffix, _context))
+                Return _settings.Layout(_context & {"", Contexts.KeyboardSuffix, Contexts.RadialSuffix}(_device))
             End Get
         End Property
 
         Friend ReadOnly Property KeyboardMode As Boolean
             Get
-                Return _keyboard
+                Return _device = 1
+            End Get
+        End Property
+
+        Friend ReadOnly Property RadialMode As Boolean
+            Get
+                Return _device = 2
+            End Get
+        End Property
+
+        ''' <summary>12 keys, or 8 slots for the radial menu.</summary>
+        Friend ReadOnly Property SlotCount As Integer
+            Get
+                Return If(RadialMode, Contexts.RadialSlots, Contexts.KeyCount)
             End Get
         End Property
 
         Private Sub OnDevice(sender As Object, e As EventArgs)
             Dim rb = CType(sender, RadioButton)
             If Not rb.Checked Then Return
-            _keyboard = CBool(rb.Tag)
+            _device = CInt(rb.Tag)
             _selected = 0
             LoadContext()
+        End Sub
+
+        ' the radial menu has 8 rows (4 + 4) and a taller preview; the keys have 12 rows (6 + 6)
+        Private Sub ArrangeRows()
+            Dim perCol = SlotCount \ 2
+            Dim extra = If(RadialMode, 76, 0)
+            _lcd.Height = 150 + extra
+            _rowsLabel.Top = 308 + extra
+            _rowsLabel.Text = If(RadialMode, "Function per slot (1 = top, then clockwise)", "Function per key")
+            For i = 0 To Contexts.KeyCount - 1
+                Dim col = i \ perCol
+                _rows(i).Location = New Point(20 + col * 364, 328 + extra + (i Mod perCol) * 38)
+                _rows(i).Visible = i < SlotCount
+                _rows(i).Controls(0).Text = If(RadialMode, "Slot", "Key")
+            Next
         End Sub
 
         Friend ReadOnly Property Settings As Settings
@@ -363,8 +396,10 @@ Namespace KochSpaceMouse
             ' functions with a shortcut first, then alphabetical
             items.AddRange(all.OrderBy(Function(f) If(String.IsNullOrWhiteSpace(f.Shortcut), 1, 0)) _
                               .ThenBy(Function(f) f.Name, StringComparer.CurrentCultureIgnoreCase))
-            _previewLabel.Text = If(_keyboard, "Keyboard Pro keys - no display on the keyboard, the icons are for your overview (click a key to edit it)",
-                                    "LCD preview (click a key to edit it)")
+            _previewLabel.Text = {"LCD preview (click a key to edit it)",
+                                  "Keyboard Pro keys - no display on the keyboard, the icons are for your overview (click a key to edit it)",
+                                  "Radial menu - opens with the MENU button on any SpaceMouse (left button on the Compact). Click a slot to edit it"}(_device)
+            ArrangeRows()
             Dim layout = CurrentLayout
             For i = 0 To Contexts.KeyCount - 1
                 Dim cb = _combos(i)
@@ -535,6 +570,10 @@ Namespace KochSpaceMouse
                 Using bg As New SolidBrush(AccentBg)
                     g.FillRectangle(bg, ClientRectangle)
                 End Using
+                If _owner.RadialMode Then
+                    PaintRadial(g)
+                    Return
+                End If
                 Dim layout = _owner.CurrentLayout
                 Using numFont As New Font("Segoe UI", 8.0F, FontStyle.Bold),
                       nameFont As New Font("Segoe UI", 8.0F),
@@ -563,8 +602,112 @@ Namespace KochSpaceMouse
                 End Using
             End Sub
 
+            ' ---- radial menu: slot 1 at the top, then clockwise (3DxWare's MenuButton_1..8)
+            Private ReadOnly Property Center As PointF
+                Get
+                    Return New PointF(Width / 2.0F, Height / 2.0F)
+                End Get
+            End Property
+
+            Private ReadOnly Property Outer As Single
+                Get
+                    Return Height / 2.0F - 24
+                End Get
+            End Property
+
+            Private Function SlotAngle(i As Integer) As Single
+                Return -90.0F + i * 45.0F           ' degrees, GDI+ (0 = right, clockwise)
+            End Function
+
+            Private Function SlotAt(p As Point) As Integer
+                Dim c = Center
+                Dim dx = p.X - c.X, dy = p.Y - c.Y
+                Dim r = Math.Sqrt(dx * dx + dy * dy)
+                If r < Outer * 0.3 OrElse r > Outer + 22 Then Return -1
+                Dim a = Math.Atan2(dy, dx) * 180 / Math.PI + 90 + 22.5   ' 0 at the top, clockwise
+                If a < 0 Then a += 360
+                Return CInt(Math.Floor(a / 45)) Mod 8
+            End Function
+
+            Private Sub PaintRadial(g As Graphics)
+                Dim layout = _owner.CurrentLayout
+                Dim c = Center
+                Dim ro = Outer, ri = Outer * 0.3F
+                Using numFont As New Font("Segoe UI", 8.0F, FontStyle.Bold),
+                      nameFont As New Font("Segoe UI", 8.25F),
+                      redBrush As New SolidBrush(Red),
+                      linePen As New Pen(Color.FromArgb(&HD0, &HDC, &HE8), 1.5F),
+                      selBrush As New SolidBrush(Color.FromArgb(&HC8, &HDF, &HF5)),
+                      selPen As New Pen(Accent, 2)
+                    g.FillEllipse(Brushes.White, c.X - ro, c.Y - ro, 2 * ro, 2 * ro)
+                    For i = 0 To Contexts.RadialSlots - 1
+                        Dim a0 = SlotAngle(i) - 22.5F
+                        If i = _owner.SelectedKey Then
+                            Using path As New GraphicsPath()
+                                path.AddArc(c.X - ro, c.Y - ro, 2 * ro, 2 * ro, a0, 45)
+                                path.AddArc(c.X - ri, c.Y - ri, 2 * ri, 2 * ri, a0 + 45, -45)
+                                path.CloseFigure()
+                                g.FillPath(selBrush, path)
+                                g.DrawPath(selPen, path)
+                            End Using
+                        End If
+                        Dim rad = a0 * Math.PI / 180
+                        g.DrawLine(linePen, c.X + ri * CSng(Math.Cos(rad)), c.Y + ri * CSng(Math.Sin(rad)),
+                                   c.X + ro * CSng(Math.Cos(rad)), c.Y + ro * CSng(Math.Sin(rad)))
+                    Next
+                    g.DrawEllipse(linePen, c.X - ro, c.Y - ro, 2 * ro, 2 * ro)
+                    g.FillEllipse(New SolidBrush(AccentBg), c.X - ri, c.Y - ri, 2 * ri, 2 * ri)
+                    g.DrawEllipse(linePen, c.X - ri, c.Y - ri, 2 * ri, 2 * ri)
+                    TextRenderer.DrawText(g, "MENU", numFont, New Rectangle(CInt(c.X - ri), CInt(c.Y - 8), CInt(2 * ri), 16), Color.Gray,
+                                          TextFormatFlags.HorizontalCenter Or TextFormatFlags.VerticalCenter)
+
+                    For i = 0 To Contexts.RadialSlots - 1
+                        Dim rad = SlotAngle(i) * Math.PI / 180
+                        Dim cos = CSng(Math.Cos(rad)), sin = CSng(Math.Sin(rad))
+                        Dim rm = (ro + ri) / 2
+                        Dim mx = c.X + rm * cos, my = c.Y + rm * sin
+                        Dim f = _owner.Settings.Find(layout(i))
+                        Const isz = 26
+                        If f Is Nothing Then
+                            TextRenderer.DrawText(g, CStr(i + 1), numFont, New Rectangle(CInt(mx - 15), CInt(my - 9), 30, 18), Red,
+                                                  TextFormatFlags.HorizontalCenter Or TextFormatFlags.VerticalCenter)
+                        Else
+                            Using icon = _owner.IconFor(f, isz)
+                                g.DrawImage(icon, CInt(mx - isz / 2), CInt(my - isz / 2))
+                            End Using
+                            g.DrawString(CStr(i + 1), numFont, redBrush, mx - isz / 2.0F - 10, my - isz / 2.0F - 6)
+                        End If
+                        ' name outside the circle, pointing away from the centre
+                        Dim name = If(f Is Nothing, "default", f.Name)
+                        Dim lx = c.X + (ro + 8) * cos, ly = c.Y + (ro + 8) * sin
+                        Dim sz = TextRenderer.MeasureText(name, nameFont)
+                        Dim tx As Single
+                        If Math.Abs(cos) < 0.2 Then
+                            tx = lx - sz.Width / 2.0F
+                        ElseIf cos > 0 Then
+                            tx = lx
+                        Else
+                            tx = lx - sz.Width
+                        End If
+                        Dim ty = If(Math.Abs(sin) < 0.2, ly - sz.Height / 2.0F, If(sin > 0, ly - 2, ly - sz.Height + 2))
+                        TextRenderer.DrawText(g, name, nameFont, New Point(CInt(tx), CInt(ty)), If(f Is Nothing, Color.Gray, Color.Black))
+                    Next
+                End Using
+            End Sub
+
             Protected Overrides Sub OnMouseClick(e As MouseEventArgs)
                 MyBase.OnMouseClick(e)
+                If _owner.RadialMode Then
+                    Dim s = SlotAt(e.Location)
+                    If s >= 0 Then
+                        _owner.SelectKey(s, e.Button = MouseButtons.Left)
+                        If e.Button = MouseButtons.Right Then
+                            Dim f = _owner.Settings.Find(_owner.CurrentLayout(s))
+                            If f IsNot Nothing AndAlso PickIcon(_owner, f) Then _owner.LoadContextPublic()
+                        End If
+                    End If
+                    Return
+                End If
                 For i = 0 To Contexts.KeyCount - 1
                     If KeyRect(i).Contains(e.Location) Then
                         _owner.SelectKey(i, e.Button = MouseButtons.Left)

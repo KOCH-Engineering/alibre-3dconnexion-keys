@@ -73,13 +73,16 @@ Namespace KochSpaceMouse
             Try
                 Dim ids = _settings.Layout(ctx)
                 Dim kbIds = _settings.Layout(ctx & Contexts.KeyboardSuffix)
+                Dim rmIds = _settings.Layout(ctx & Contexts.RadialSuffix)
                 Dim fs(Contexts.KeyCount - 1) As KeyFunction
                 Dim kb(Contexts.KeyCount - 1) As KeyFunction
+                Dim rm(Contexts.RadialSlots - 1) As KeyFunction
                 For i = 0 To Contexts.KeyCount - 1
                     fs(i) = _settings.Find(ids(i))
                     kb(i) = _settings.Find(kbIds(i))
+                    If i < Contexts.RadialSlots Then rm(i) = _settings.Find(rmIds(i))
                 Next
-                Dim file = DxWareProfile.Write(fs, kb, AddressOf Icons.LcdPng)
+                Dim file = DxWareProfile.Write(fs, kb, rm, ctx, AddressOf Icons.LcdPng)
                 _applied = ctx
                 _log("Applied " & ctx & " layout to " & file)
             Catch ex As Exception

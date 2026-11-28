@@ -76,5 +76,61 @@
       <Key n="11" function="" />
       <Key n="12" function="" />
     </Layout>
+    <Layout context="Part|Radial">
+      <Key n="1" function="f_boss_extrude" />
+      <Key n="2" function="f_fillet" />
+      <Key n="3" function="f_redo" />
+      <Key n="4" function="f_regenerate" />
+      <Key n="5" function="f_cut_extrude" />
+      <Key n="6" function="f_toggle_refs" />
+      <Key n="7" function="f_undo" />
+      <Key n="8" function="f_chamfer" />
+      <Key n="9" function="" />
+      <Key n="10" function="" />
+      <Key n="11" function="" />
+      <Key n="12" function="" />
+    </Layout>
+    <Layout context="Assembly|Radial">
+      <Key n="1" function="f_new_part" />
+      <Key n="2" function="f_save" />
+      <Key n="3" function="f_redo" />
+      <Key n="4" function="f_regenerate" />
+      <Key n="5" function="f_toggle_refs" />
+      <Key n="6" function="f_delete" />
+      <Key n="7" function="f_undo" />
+      <Key n="8" function="f_escape" />
+      <Key n="9" function="" />
+      <Key n="10" function="" />
+      <Key n="11" function="" />
+      <Key n="12" function="" />
+    </Layout>
+    <Layout context="Sketch|Radial">
+      <Key n="1" function="" />
+      <Key n="2" function="" />
+      <Key n="3" function="" />
+      <Key n="4" function="" />
+      <Key n="5" function="" />
+      <Key n="6" function="" />
+      <Key n="7" function="" />
+      <Key n="8" function="" />
+      <Key n="9" function="" />
+      <Key n="10" function="" />
+      <Key n="11" function="" />
+      <Key n="12" function="" />
+    </Layout>
+    <Layout context="Drawing|Radial">
+      <Key n="1" function="" />
+      <Key n="2" function="" />
+      <Key n="3" function="" />
+      <Key n="4" function="" />
+      <Key n="5" function="" />
+      <Key n="6" function="" />
+      <Key n="7" function="" />
+      <Key n="8" function="" />
+      <Key n="9" function="" />
+      <Key n="10" function="" />
+      <Key n="11" function="" />
+      <Key n="12" function="" />
+    </Layout>
   </Layouts>
 </SpaceMouse>

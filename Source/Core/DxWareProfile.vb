@@ -73,8 +73,10 @@ Namespace KochSpaceMouse
             Return Path.Combine(CfgFolder, "Alibre Design V2.xml")
         End Function
 
-        ''' <summary>Writes the 12 keys. functions(i) Nothing = leave key i+1 to 3DxWare's default.</summary>
-        Public Shared Function Write(functions As KeyFunction(), keyboardFunctions As KeyFunction(), iconFor As Func(Of KeyFunction, Byte())) As String
+        ''' <summary>Writes the 12 keys and the radial menu. functions(i) Nothing = leave key i+1 to 3DxWare's default.
+        ''' radial all Nothing = the MENU button keeps 3DxWare's own menu.</summary>
+        Public Shared Function Write(functions As KeyFunction(), keyboardFunctions As KeyFunction(), radial As KeyFunction(),
+                                     context As String, iconFor As Func(Of KeyFunction, Byte())) As String
             Dim file = FindProfile()
             Dim doc As XDocument
             If IO.File.Exists(file) Then
@@ -96,6 +98,7 @@ Namespace KochSpaceMouse
             If keyboardFunctions IsNot Nothing Then
                 WriteDevice(root, KeyboardId, AddressOf KeyboardInput, keyboardFunctions, actions, macros, written, iconFor)
             End If
+            WriteRadial(root, radial, context, actions, macros, written, iconFor)
 
             Dim ws As New XmlWriterSettings With {.Encoding = New UTF8Encoding(False), .Indent = True}
             Dim tmp = file & ".koch.tmp"
@@ -120,34 +123,120 @@ Namespace KochSpaceMouse
             For i = 0 To Contexts.KeyCount - 1
                 Dim f = functions(i)
                 If f Is Nothing Then Continue For
-                Dim actionId = Prefix & f.Id
-                If Not written.Contains(actionId) Then
-                    written.Add(actionId)
-                    Dim seq As New XElement("Sequence", New XAttribute("Pause", "120"))
-                    If Not String.IsNullOrWhiteSpace(f.Shortcut) Then
-                        Dim macroId = Prefix & f.Shortcut.ToUpperInvariant()
-                        If Not macros.Elements("MacroEntry").Any(Function(e) IdOf(e) = macroId) Then
-                            macros.Add(KeyStroke.ToMacroEntry(macroId, f.Shortcut))
-                        End If
-                        seq.Add(New XElement("ActionID", New XAttribute("Pause", "40"), macroId))
-                    End If
-                    Dim action As New XElement("ButtonAction", New XAttribute("Type", "Sequence"),
-                        New XElement("ID", actionId),
-                        New XElement("Name", f.Name))
-                    Dim png = iconFor(f)
-                    If png IsNot Nothing AndAlso png.Length > 0 Then
-                        action.Add(New XElement("Image", New XAttribute("Type", "Data"),
-                            New XElement("Data", New XAttribute("encoding", "base64"), Convert.ToBase64String(png))))
-                    End If
-                    If Not seq.HasElements Then seq.Value = ""   ' write <Sequence ...></Sequence> like 3DxWare does
-                    action.Add(seq)
-                    actions.Add(action)
-                End If
+                Dim actionId = AddAction(f, actions, macros, written, iconFor)
                 bank.Add(New XElement("Button",
                     New XElement("Input", New XElement("ActionID", inputFor(i))),
                     New XElement("Output", New XElement("ActionID", actionId))))
             Next
         End Sub
+
+        ''' <summary>Adds the ButtonAction (and its key stroke) for a function once; returns its action id.</summary>
+        Private Shared Function AddAction(f As KeyFunction, actions As XElement, macros As XElement, written As HashSet(Of String),
+                                          iconFor As Func(Of KeyFunction, Byte())) As String
+            Dim actionId = Prefix & f.Id
+            If written.Contains(actionId) Then Return actionId
+            written.Add(actionId)
+            Dim seq As New XElement("Sequence", New XAttribute("Pause", "120"))
+            If Not String.IsNullOrWhiteSpace(f.Shortcut) Then
+                Dim macroId = Prefix & f.Shortcut.ToUpperInvariant()
+                If Not macros.Elements("MacroEntry").Any(Function(e) IdOf(e) = macroId) Then
+                    macros.Add(KeyStroke.ToMacroEntry(macroId, f.Shortcut))
+                End If
+                seq.Add(New XElement("ActionID", New XAttribute("Pause", "40"), macroId))
+            End If
+            Dim action As New XElement("ButtonAction", New XAttribute("Type", "Sequence"),
+                New XElement("ID", actionId),
+                New XElement("Name", f.Name))
+            Dim png = iconFor(f)
+            If png IsNot Nothing AndAlso png.Length > 0 Then
+                action.Add(New XElement("Image", New XAttribute("Type", "Data"),
+                    New XElement("Data", New XAttribute("encoding", "base64"), Convert.ToBase64String(png))))
+            End If
+            If Not seq.HasElements Then seq.Value = ""   ' write <Sequence ...></Sequence> like 3DxWare does
+            action.Add(seq)
+            actions.Add(action)
+            Return actionId
+        End Function
+
+        ' ---------------------------------------------------------------- radial menu
+        '
+        ' 3DxWare draws radial menus with 3DxPieMenus.exe. In the profile:
+        '   Menus/Menu[@Type=Radial]   - ID, Name, Style (EightButton), Button: MenuButton_1..8 -> ButtonAction
+        '   ButtonAction Type="Menu"   - opens a menu (MenuID); ID "RadialMenu_" + menu id
+        '   Device ID_Standard_3D_Mouse - virtual keys shared by every SpaceMouse; V3DK_MENU is the MENU button
+        '                                (left button on the SpaceMouse Compact, MENU key on Pro/Enterprise)
+
+        Public Const StandardMouseId As String = "ID_Standard_3D_Mouse"
+        Public Const MenuInput As String = "V3DK_MENU"
+        Private Const RadialMenuId As String = "KOCH_MenuRM_Alibre"
+        Private Const RadialActionId As String = "KOCH_RadialMenu_Alibre"
+
+        Private Shared Sub WriteRadial(root As XElement, radial As KeyFunction(), context As String, actions As XElement, macros As XElement,
+                                       written As HashSet(Of String), iconFor As Func(Of KeyFunction, Byte()))
+            ' remove what we wrote before
+            Dim menus = root.Element("Menus")
+            If menus IsNot Nothing Then
+                menus.Elements("Menu").Where(Function(m) IdOf(m).StartsWith(Prefix)).ToList().ForEach(Sub(m) m.Remove())
+            End If
+            Dim bank = GetBank(root, StandardMouseId)
+            bank.Elements("Button").Where(Function(b) InputOf(b) = MenuInput AndAlso OutputOf(b).StartsWith(Prefix)).ToList().ForEach(Sub(b) b.Remove())
+
+            If radial Is Nothing OrElse radial.All(Function(f) f Is Nothing) Then
+                ' nothing chosen: leave the MENU button to 3DxWare
+                If menus IsNot Nothing AndAlso Not menus.Elements("Menu").Any() Then menus.Remove()
+                If Not bank.Elements("Button").Any() Then
+                    Dim dev = bank.Parent
+                    bank.Remove()
+                    If dev IsNot Nothing AndAlso dev.Elements().All(Function(x) x.Name = "ID") Then dev.Remove()
+                End If
+                Return
+            End If
+
+            If menus Is Nothing Then
+                menus = New XElement("Menus", New XElement("Executable", "3DxPieMenus.exe"))
+                Dim before = root.Element("Devices")
+                If before IsNot Nothing Then before.AddBeforeSelf(menus) Else root.Add(menus)
+            ElseIf menus.Element("Executable") Is Nothing Then
+                menus.AddFirst(New XElement("Executable", "3DxPieMenus.exe"))
+            End If
+
+            Dim menuName = "Alibre " & If(String.IsNullOrEmpty(context), "", context)
+            Dim menu As New XElement("Menu", New XAttribute("Type", "Radial"),
+                New XElement("ID", RadialMenuId),
+                New XElement("Name", menuName.Trim()),
+                New XElement("GesturesEnabled", "true"),
+                New XElement("Style", "EightButton"))
+            For i = 0 To Math.Min(radial.Length, Contexts.RadialSlots) - 1
+                Dim f = radial(i)
+                If f Is Nothing Then Continue For
+                Dim actionId = AddAction(f, actions, macros, written, iconFor)
+                menu.Add(New XElement("Button",
+                    New XElement("Input", New XElement("ActionID", "MenuButton_" & (i + 1))),
+                    New XElement("Output", New XElement("ActionID", actionId))))
+            Next
+            menus.Add(menu)
+
+            ' the ButtonAction that opens the menu (same form as 3DxWare writes it)
+            Dim xsi As XNamespace = "http://www.w3.org/2001/XMLSchema-instance"
+            If root.Attribute(XNamespace.Xmlns + "xsi") Is Nothing Then root.Add(New XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName))
+            actions.Add(New XElement("ButtonAction", New XAttribute("Type", "Menu"), New XAttribute(xsi + "type", "ButtonAction_Menu"),
+                New XElement("ID", RadialActionId),
+                New XElement("Name", menuName.Trim()),
+                New XElement("MenuID", RadialMenuId)))
+
+            ' MENU button -> our menu (a button the user mapped there himself is replaced; 3DxWare's default comes back when the menu is emptied)
+            bank.Elements("Button").Where(Function(b) InputOf(b) = MenuInput).ToList().ForEach(Sub(b) b.Remove())
+            bank.Add(New XElement("Button",
+                New XElement("Input", New XElement("ActionID", MenuInput)),
+                New XElement("Output", New XElement("ActionID", RadialActionId))))
+        End Sub
+
+        Private Shared Function OutputOf(button As XElement) As String
+            Dim o = button.Element("Output")
+            If o Is Nothing Then Return ""
+            Dim a = o.Element("ActionID")
+            Return If(a Is Nothing, "", a.Value.Trim())
+        End Function
 
         ' ---------------------------------------------------------------- helpers
 
