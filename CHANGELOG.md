@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.8.0 – 2026-11-28
+Release of the 0.7.x work:
+- **Radial menu for every SpaceMouse**, also the two-button SpaceMouse Compact (idea: HaroldL): 8 functions around the pointer on the MENU button, one menu per Part, Assembly, Sketch and Drawing.
+- **Every Alibre ribbon command works without a keyboard shortcut**: the add-on clicks the command in Alibre's ribbon itself, also from the radial menu.
+- A beep and a short message when a command is not available in the active window.
+- **Fix:** LCD keys 11 and 12 on the SpaceMouse Enterprise (they changed the Esc and Alt keys before).
+- The Sketch layout is now used while a sketch is edited.
+- Clearer dialog: context tabs with icons, device switch, readable command names, each command listed once.
+
 ## 0.7.13 – 2026-11-28
 - The **Sketch** layout is used while you edit a sketch in a part: the add-on sees it from the sketch tools in Alibre's ribbon (Alibre's API did not report it).
 

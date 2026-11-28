@@ -12,7 +12,7 @@ Unicode true
 !include "LogicLib.nsh"
 
 !define APPNAME   "KOCH 3Dconnexion Keys (Alibre add-on)"
-!define VERSION   "0.6.3"
+!define VERSION   "0.8.0"
 !define PUBLISHER "KOCH Engineering"
 !define ADDONID   "{C79D2D04-31E5-4887-83CC-6B2F46C2E768}"
 !define UNINSTKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\KochSpaceMouse"
@@ -35,7 +35,7 @@ VIAddVersionKey "Comments" "Developed by ${PUBLISHER} (Henrik J. Koch, Denmark)"
 !define MUI_UNICON "${LOADER}\SpaceMouse.ico"
 !define MUI_ABORTWARNING
 !define MUI_WELCOMEPAGE_TITLE "KOCH 3Dconnexion Keys for Alibre Design"
-!define MUI_WELCOMEPAGE_TEXT "KOCH Engineering - Henrik J. Koch - Denmark - © 2026$\r$\nBuilt with Claude (Anthropic).$\r$\n$\r$\nChoose what the 12 LCD keys of a 3Dconnexion SpaceMouse Enterprise and the 12 keys of a Keyboard Pro do in Alibre Design - with names, icons and one layout per Part, Assembly, Sketch and Drawing.$\r$\n$\r$\nRequires Alibre Design (64-bit) and 3Dconnexion 3DxWare 10.$\r$\n$\r$\nPlease close Alibre Design before you continue."
+!define MUI_WELCOMEPAGE_TEXT "KOCH Engineering - Henrik J. Koch - Denmark - © 2026$\r$\nBuilt with Claude (Anthropic).$\r$\n$\r$\nChoose what the 12 LCD keys of a 3Dconnexion SpaceMouse Enterprise, the 12 keys of a Keyboard Pro and a radial menu on the MENU button of any SpaceMouse do in Alibre Design - with names, icons and one layout per Part, Assembly, Sketch and Drawing.$\r$\n$\r$\nRequires Alibre Design (64-bit) and 3Dconnexion 3DxWare 10.$\r$\n$\r$\nPlease close Alibre Design before you continue."
 !define MUI_FINISHPAGE_TEXT "KOCH 3Dconnexion Keys is installed. Thank you for using a tool from KOCH Engineering.$\r$\n$\r$\nStart Alibre Design and click Add-on > 3Dconnexion > 3Dconnexion keys..."
 !define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\README.txt"
 !define MUI_FINISHPAGE_SHOWREADME_TEXT "Show README"
