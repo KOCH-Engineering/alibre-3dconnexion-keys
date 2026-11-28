@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.13 – 2026-11-28
+- The **Sketch** layout is used while you edit a sketch in a part: the add-on sees it from the sketch tools in Alibre's ribbon (Alibre's API did not report it).
+
 ## 0.7.12 – 2026-11-28
 - **Fix: LCD keys 11 and 12** were written to the Enterprise's **Esc** and **Alt** keys (HIDButton_23/24). They are now written to the right buttons (HIDButton_77/78), and the wrong entries from earlier versions are removed, so Esc and Alt work as before.
 

@@ -620,6 +620,19 @@ Namespace KochSpaceMouse
             Return ok
         End Function
 
+        ' Alibre's API does not tell reliably whether a sketch is being edited, but the sketch tools in the
+        ' ribbon are only enabled while it is. True/False, or Nothing if this window has no such tool.
+        Public Function SketchToolsEnabled(form As Form) As Boolean?
+            If form Is Nothing Then Return Nothing
+            For Each cap In {"Trim", "Extend", "Sketch Fillet"}
+                Dim it = FindItem(form, "", cap, "")
+                If it Is Nothing Then Continue For
+                Dim en = Prop(it, "Enabled")
+                If TypeOf en Is Boolean Then Return CBool(en)
+            Next
+            Return Nothing
+        End Function
+
         ''' <summary>Clicks a ribbon item, like the user would.</summary>
         Public Sub Click(item As Object)
             item.PerformClick()

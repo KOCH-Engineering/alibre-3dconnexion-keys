@@ -48,6 +48,7 @@ Namespace KochSpaceMouse
         End Sub
 
         Private _designTicks As Integer
+        Private _sketchLogged As Boolean?
         Private _prewarmed As Boolean
 
         Private Sub OnTick(sender As Object, e As EventArgs)
@@ -70,6 +71,19 @@ Namespace KochSpaceMouse
                 End If
             End If
             If ctx <> "" Then _runner.Track(Form.ActiveForm)
+            ' a part window with the sketch tools enabled is a sketch (the loader's API check does not see it)
+            If ctx = "Part" AndAlso Form.ActiveForm IsNot Nothing Then
+                Dim sk As Boolean? = Nothing
+                Try
+                    sk = AlibreCommands.SketchToolsEnabled(Form.ActiveForm)
+                Catch
+                End Try
+                If sk.HasValue AndAlso sk.Value Then ctx = "Sketch"
+                If sk.HasValue AndAlso (Not _sketchLogged.HasValue OrElse _sketchLogged.Value <> sk.Value) Then
+                    _sketchLogged = sk
+                    _log("Sketch tools " & If(sk.Value, "enabled -> Sketch", "disabled -> Part"))
+                End If
+            End If
             If Not _settings.AutoSwitch Then Return
             If ctx = "" OrElse ctx = _applied Then Return
             Apply(ctx)
