@@ -132,6 +132,7 @@ Namespace KochSpaceMouse
                 End If
                 f.Name = c.Caption
                 f.Shortcut = c.Shortcut
+                f.Command = c.Id
                 f.Category = AlibreCommands.GuessCategory(c)
                 If c.Image IsNot Nothing Then
                     Try

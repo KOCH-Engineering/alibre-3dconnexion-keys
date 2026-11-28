@@ -477,6 +477,65 @@ Namespace KochSpaceMouse
             Return Nothing
         End Function
 
+        ' ---------------------------------------------------------------- run a command
+
+        ' per window: command name -> ribbon item, and caption -> ribbon item
+        Private ReadOnly _itemsByForm As New Dictionary(Of Form, Tuple(Of Dictionary(Of String, Object), Dictionary(Of String, Object)))
+
+        ''' <summary>The ribbon item of this window for a command (by its name, else by its caption).</summary>
+        Public Function FindItem(form As Form, command As String, caption As String) As Object
+            For Each dead In _itemsByForm.Keys.Where(Function(f) f.IsDisposed).ToList()
+                _itemsByForm.Remove(dead)
+            Next
+            Dim maps As Tuple(Of Dictionary(Of String, Object), Dictionary(Of String, Object)) = Nothing
+            If Not _itemsByForm.TryGetValue(form, maps) Then
+                maps = Tuple.Create(New Dictionary(Of String, Object)(StringComparer.OrdinalIgnoreCase),
+                                    New Dictionary(Of String, Object)(StringComparer.OrdinalIgnoreCase))
+                Dim ribbons As New List(Of Object)
+                FindRibbons(form, ribbons, 0)
+                For Each r In ribbons
+                    Try
+                        For Each it In r.Items
+                            Try
+                                Dim tn = it.GetType().FullName
+                                If Not (tn.Contains("BarButtonItem") OrElse tn.Contains("BarLargeButtonItem") OrElse tn.Contains("BarCheckItem")) Then Continue For
+                                Dim name As String = ""
+                                Try
+                                    If TypeOf it.Tag Is String Then name = CStr(it.Tag)
+                                Catch
+                                End Try
+                                If String.IsNullOrEmpty(name) Then name = CStr(it.Name)
+                                If Not String.IsNullOrEmpty(name) AndAlso Not maps.Item1.ContainsKey(name) Then maps.Item1(name) = it
+                                Dim cap = TipTitle(it)
+                                If cap = "" Then cap = CStr(it.Caption)
+                                If Not String.IsNullOrEmpty(cap) Then
+                                    cap = cap.Replace("&", "").Trim()
+                                    If Not maps.Item2.ContainsKey(cap) Then maps.Item2(cap) = it
+                                End If
+                            Catch
+                            End Try
+                        Next
+                    Catch
+                    End Try
+                Next
+                If maps.Item1.Count + maps.Item2.Count > 0 Then _itemsByForm(form) = maps
+            End If
+            Dim found As Object = Nothing
+            If Not String.IsNullOrEmpty(command) AndAlso maps.Item1.TryGetValue(command, found) Then Return found
+            If Not String.IsNullOrEmpty(caption) AndAlso maps.Item2.TryGetValue(caption.Trim(), found) Then Return found
+            Return Nothing
+        End Function
+
+        ''' <summary>Clicks a ribbon item, like the user would. False if it is disabled or cannot be clicked.</summary>
+        Public Function Click(item As Object) As Boolean
+            Try
+                If Not CBool(item.Enabled) Then Return False
+            Catch
+            End Try
+            item.PerformClick()
+            Return True
+        End Function
+
         ''' <summary>Guess Part/Assembly/Sketch/Drawing/General from the ribbon page and window.</summary>
         Public Function GuessCategory(fc As FoundCommand) As String
             Dim s = (fc.Page & " " & fc.Window).ToLowerInvariant()

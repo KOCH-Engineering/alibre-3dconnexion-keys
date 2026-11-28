@@ -18,6 +18,8 @@ Namespace KochSpaceMouse
         Public Property Category As String = "General"
         ''' <summary>PNG file name in the user's icon folder. Empty = generated icon.</summary>
         Public Property Icon As String = ""
+        ''' <summary>Alibre ribbon command (item tag or name). Used to run the command when it has no shortcut.</summary>
+        Public Property Command As String = ""
 
         Public Overrides Function ToString() As String
             Return Name
@@ -79,6 +81,21 @@ Namespace KochSpaceMouse
             Return l
         End Function
 
+        ''' <summary>Invisible keys (F13-F24 with Ctrl/Shift/Alt) for the functions on keys and menus that have no
+        ''' shortcut: 3DxWare sends that key, the add-on catches it inside Alibre and clicks the ribbon command.
+        ''' Function id -> key text, e.g. "CTRL+F14". Up to 96 functions.</summary>
+        Public Function HiddenKeys() As Dictionary(Of String, String)
+            Dim mods = {"", "CTRL+", "SHIFT+", "ALT+", "CTRL+SHIFT+", "CTRL+ALT+", "ALT+SHIFT+", "CTRL+ALT+SHIFT+"}
+            Dim ids = Contexts.AllLayoutKeys().SelectMany(Function(c) Layout(c)).Where(Function(id) id <> "").Distinct() _
+                      .Select(Function(id) Find(id)).Where(Function(f) f IsNot Nothing AndAlso String.IsNullOrWhiteSpace(f.Shortcut)) _
+                      .Select(Function(f) f.Id).OrderBy(Function(id) id, StringComparer.Ordinal).ToList()
+            Dim map As New Dictionary(Of String, String)
+            For k = 0 To Math.Min(ids.Count, mods.Length * 12) - 1
+                map(ids(k)) = mods(k \ 12) & "F" & (13 + k Mod 12)
+            Next
+            Return map
+        End Function
+
         Public Function NewId() As String
             Return "f_" & Guid.NewGuid().ToString("N").Substring(0, 10)
         End Function
@@ -122,7 +139,8 @@ Namespace KochSpaceMouse
                     New XAttribute("name", f.Name),
                     New XAttribute("shortcut", f.Shortcut),
                     New XAttribute("category", f.Category),
-                    New XAttribute("icon", f.Icon)))
+                    New XAttribute("icon", f.Icon),
+                    New XAttribute("command", f.Command)))
             Next
             root.Add(fx)
             Dim lx As New XElement("Layouts")
@@ -149,7 +167,7 @@ Namespace KochSpaceMouse
                     s.Functions.Add(New KeyFunction With {
                         .Id = Attr(e, "id"), .Name = Attr(e, "name"), .Shortcut = Attr(e, "shortcut"),
                         .Category = If(Attr(e, "category") = "", "General", Attr(e, "category")),
-                        .Icon = Attr(e, "icon")})
+                        .Icon = Attr(e, "icon"), .Command = Attr(e, "command")})
                 Next
             End If
             Dim lx = root.Element("Layouts")
@@ -190,7 +208,7 @@ Namespace KochSpaceMouse
                 Dim mine = Functions.FirstOrDefault(Function(x) String.Equals(x.Name, f.Name, StringComparison.OrdinalIgnoreCase))
                 If mine Is Nothing Then
                     mine = New KeyFunction With {.Id = NewId(), .Name = f.Name, .Shortcut = f.Shortcut,
-                                                 .Category = f.Category, .Icon = f.Icon}
+                                                 .Category = f.Category, .Icon = f.Icon, .Command = f.Command}
                     Functions.Add(mine)
                 End If
                 map(f.Id) = mine.Id

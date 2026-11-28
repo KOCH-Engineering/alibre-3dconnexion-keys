@@ -67,12 +67,11 @@ Read the **[User guide](docs/USER-GUIDE.md)** for the details: shortcuts, icons,
 
 ## Important: how a key runs a command
 
-3DxWare can only send **keystrokes**. A key therefore runs an Alibre command by sending that command's **keyboard shortcut**. Today this means:
+3DxWare can only send **keystrokes**. So:
 
-- Commands that **have a shortcut in Alibre** (e.g. Extrude Boss = `Ctrl+Alt+B`) work immediately.
-- For other commands, assign a shortcut in Alibre (**File → Preferences → Keyboard shortcuts**, or the customise dialog) and enter the **same** shortcut in **Edit functions…**. The dialog warns you on Save if a key has a function without a shortcut.
-
-A future version will run *every* ribbon command directly, with no shortcut needed. See the [roadmap](#roadmap).
+- Commands that **have a shortcut in Alibre** (e.g. Extrude Boss = `Ctrl+Alt+B`) are sent as that shortcut.
+- **Every other ribbon command works too, with nothing to set up.** The add-on gives it an invisible key (F13–F24 with Ctrl/Shift/Alt, which no normal keyboard has). 3DxWare sends that key, the add-on catches it inside Alibre and clicks the command's ribbon button in the active window. The list shows these as *run by add-on*.
+- Only your own functions that are not in Alibre's ribbon (e.g. an Alibre Script) need a shortcut in **Edit functions…**.
 
 ## Files on your PC
 
@@ -113,7 +112,7 @@ Source/
 
 ## Roadmap
 
-- [ ] Run **any** ribbon command without a keyboard shortcut. The add-on will reserve hidden hotkeys and click the ribbon item inside Alibre.
+- [x] Run **any** ribbon command without a keyboard shortcut (0.7.1).
 - [ ] Code-signed installer.
 - [ ] More 3Dconnexion devices (SpaceMouse Pro, CadMouse Pro).
 

@@ -213,7 +213,7 @@ Namespace KochSpaceMouse
                     names.Add(c.Caption.ToLowerInvariant())
                     Dim kf As New KeyFunction With {
                         .Id = "alibre_" & System.Text.RegularExpressions.Regex.Replace(c.Id, "[^A-Za-z0-9_]", "_"),
-                        .Name = c.Caption, .Shortcut = c.Shortcut, .Category = AlibreCommands.GuessCategory(c)}
+                        .Name = c.Caption, .Shortcut = c.Shortcut, .Category = AlibreCommands.GuessCategory(c), .Command = c.Id}
                     _alibre.Add(kf)
                     _alibreImages(kf) = c
                 Next
@@ -279,7 +279,7 @@ Namespace KochSpaceMouse
                 End Using
             End If
             If f Is Nothing Then
-                TextRenderer.DrawText(g, CStr(item), fnt, New Rectangle(r.X + 26, r.Y, r.Width - 26, r.Height), dim_,
+                TextRenderer.DrawText(g, If(RadialMode, "(empty)", CStr(item)), fnt, New Rectangle(r.X + 26, r.Y, r.Width - 26, r.Height), dim_,
                                       TextFormatFlags.VerticalCenter Or TextFormatFlags.Left)
                 Return
             End If
@@ -287,14 +287,31 @@ Namespace KochSpaceMouse
                 g.DrawImage(icon, r.X + 3, r.Y + (r.Height - 18) \ 2)
             End Using
             Dim noKey = String.IsNullOrWhiteSpace(f.Shortcut)
-            Dim right = If(noKey, "(no shortcut)", f.Shortcut)
+            Dim right = If(noKey, If(Runnable(f), "run by add-on", "(not found)"), f.Shortcut)
             If usedOn >= 0 Then right = "key " & (usedOn + 1) & "  ·  " & right
             Dim rw = TextRenderer.MeasureText(right, fnt).Width + 6
             TextRenderer.DrawText(g, f.Name, fnt, New Rectangle(r.X + 26, r.Y, r.Width - 26 - rw, r.Height),
-                                  If(noKey, dim_, fore), TextFormatFlags.VerticalCenter Or TextFormatFlags.Left Or TextFormatFlags.EndEllipsis)
+                                  If(noKey AndAlso Not Runnable(f), dim_, fore), TextFormatFlags.VerticalCenter Or TextFormatFlags.Left Or TextFormatFlags.EndEllipsis)
             TextRenderer.DrawText(g, right, fnt, New Rectangle(r.Right - rw, r.Y, rw - 2, r.Height), dim_,
                                   TextFormatFlags.VerticalCenter Or TextFormatFlags.Right)
         End Sub
+
+        Private _captions As HashSet(Of String)
+
+        ''' <summary>A function without a shortcut can be run by the add-on if it is one of Alibre's ribbon commands.</summary>
+        Friend Function Runnable(f As KeyFunction) As Boolean
+            If Not String.IsNullOrWhiteSpace(f.Command) Then Return True
+            If _captions Is Nothing Then
+                _captions = New HashSet(Of String)(StringComparer.OrdinalIgnoreCase)
+                Try
+                    For Each c In AlibreCommands.ScanCached()
+                        _captions.Add(c.Caption)
+                    Next
+                Catch
+                End Try
+            End If
+            Return _captions.Contains(f.Name.Trim())
+        End Function
 
         Private Function MakeButton(text As String, x As Integer, y As Integer, w As Integer) As Button
             Dim b As New Button With {.Text = text, .Location = New Point(x, y), .Size = New Size(w, 30)}
@@ -518,13 +535,13 @@ Namespace KochSpaceMouse
             For Each c In Contexts.AllLayoutKeys()
                 For Each id In _settings.Layout(c)
                     Dim f = _settings.Find(id)
-                    If f IsNot Nothing AndAlso String.IsNullOrWhiteSpace(f.Shortcut) AndAlso Not missing.Contains(f.Name) Then missing.Add(f.Name)
+                    If f IsNot Nothing AndAlso String.IsNullOrWhiteSpace(f.Shortcut) AndAlso Not Runnable(f) AndAlso Not missing.Contains(f.Name) Then missing.Add(f.Name)
                 Next
             Next
             If missing.Count > 0 Then
-                Dim r = MessageBox.Show(Me, "These functions have no keyboard shortcut yet, so their keys will show the name and icon but do nothing:" &
+                Dim r = MessageBox.Show(Me, "These functions have no keyboard shortcut and are not in Alibre's ribbon, so their keys will show the name and icon but do nothing:" &
                                         vbCrLf & vbCrLf & String.Join(vbCrLf, missing) & vbCrLf & vbCrLf &
-                                        "Give them a shortcut in Alibre and in 'Edit functions…'. Save anyway?",
+                                        "Give them a shortcut in 'Edit functions…' (the same as in Alibre). Save anyway?",
                                         "3Dconnexion keys", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
                 If r <> DialogResult.Yes Then Return
             End If
@@ -678,7 +695,7 @@ Namespace KochSpaceMouse
                             g.DrawString(CStr(i + 1), numFont, redBrush, mx - isz / 2.0F - 10, my - isz / 2.0F - 6)
                         End If
                         ' name outside the circle, pointing away from the centre
-                        Dim name = If(f Is Nothing, "default", f.Name)
+                        Dim name = If(f Is Nothing, "empty", f.Name)
                         Dim lx = c.X + (ro + 8) * cos, ly = c.Y + (ro + 8) * sin
                         Dim sz = TextRenderer.MeasureText(name, nameFont)
                         Dim tx As Single

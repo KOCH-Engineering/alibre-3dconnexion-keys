@@ -45,9 +45,20 @@ Each context has its own layout. The tab you choose decides which layout you are
 | **Sketch** | you are editing a sketch in a part |
 | **Drawing** | a 2D drawing window is in front |
 
-### 2.2 Device: SpaceMouse Enterprise · Keyboard Pro
+### 2.2 Device: SpaceMouse Enterprise · Keyboard Pro · Radial menu
 
-The add-on shows a button for each 3Dconnexion device that 3DxWare knows about. If it can't tell, it shows both. **Each device has its own layout for each context**, so you get 4 × 2 = 8 layouts in total.
+The add-on shows a button for each 3Dconnexion device that 3DxWare knows about. If it can't tell, it shows both. **Radial menu** is always there, because it works on every SpaceMouse. **Each device has its own layout for each context**, so you get 4 × 3 = 12 layouts in total.
+
+#### The radial menu (every SpaceMouse, also the Compact)
+
+A radial menu is a ring of 8 functions that pops up around the mouse pointer. It is the way to get more than two commands out of a **SpaceMouse Compact** (idea: HaroldL), but it works on every model.
+
+1. Press the **MENU** button: the left button on the Compact, the MENU key on the Pro and Enterprise.
+2. The ring appears around the pointer, with slot 1 at the top and the others clockwise.
+3. Click a slot with the mouse, or tilt the SpaceMouse cap towards it.
+4. The command runs and the ring closes.
+
+Like the keys, the ring has its own 8 functions for Part, Assembly, Sketch and Drawing, and it follows the active Alibre window. If you leave all 8 slots *(empty)*, the MENU button keeps 3DxWare's own menu.
 
 ### 2.3 Key preview
 
@@ -93,14 +104,13 @@ When this is ticked (the default), the add-on checks the active Alibre window tw
 
 ### 3.1 Why shortcuts matter
 
-The 3DxWare driver can only send **keystrokes** to Alibre. A key therefore runs a command by "typing" that command's **keyboard shortcut**.
+The 3DxWare driver can only send **keystrokes** to Alibre.
 
-- When you pick an Alibre command that already **has** a shortcut (shown on the right in the list), the key works straight away.
-- When a command has **no** shortcut, the key shows its name and icon but does nothing until you add one. **Save** warns you about such keys.
+- When you pick an Alibre command that **has** a shortcut (shown on the right in the list), the key "types" that shortcut.
+- When a command has **no** shortcut, the list shows *run by add-on*. The add-on gives it an invisible key (F13–F24 with Ctrl/Shift/Alt; no normal keyboard has these keys). 3DxWare sends that key, the add-on catches it inside Alibre and clicks the command's ribbon button in the active window. **Nothing to set up.**
+- Only your own functions that are not in Alibre's ribbon (e.g. an Alibre Script with its own shortcut) need a shortcut. **Save** warns you about those.
 
-> A coming version will run every ribbon command directly, so no shortcut will be needed.
-
-### 3.2 Giving an Alibre command a shortcut
+### 3.2 Giving a function a shortcut (only needed for your own functions)
 
 1. In Alibre, open the keyboard-shortcut customisation (under **Preferences / Customize**, depending on your version) and assign a free combination, e.g. `Ctrl+Alt+Shift+1`.
 2. In **3Dconnexion keys… → Edit functions…**, select the function, click the **Keyboard shortcut** box and **press the same keys**.
@@ -148,7 +158,7 @@ The add-on writes the macros, button actions and key assignments for you (see th
 
 
 - It only writes to Alibre's profile, `%APPDATA%\3Dconnexion\3DxWare\Cfg\Alibre Design V2.xml`.
-- It only adds or removes entries whose IDs start with **`KOCH_`**. Your other 3DxWare settings (speed, axes, radial menus, other keys) are not touched.
+- It only adds or removes entries whose IDs start with **`KOCH_`**. Your other 3DxWare settings (speed, axes, your own radial menus, other keys) are not touched. The radial menu is the menu named *Alibre …* bound to the MENU button.
 - Before each write, the old profile is copied to `Cfg\bak\Alibre Design V2.koch-<date-time>.bak`. The 10 newest copies are kept.
 - **To restore the original:** close the 3DxWare settings window, copy the oldest `.koch-….bak` back as `Alibre Design V2.xml`, or run `uninstall.cmd`.
 
@@ -161,7 +171,8 @@ The add-on writes the macros, button actions and key assignments for you (see th
 | Symptom | What to try |
 |---|---|
 | The LCD shows the 3DxWare defaults or "Desktop" | Click in the Alibre window so it has focus. Check that 3DxWare shows the *Alibre Design* profile. If 3DxWare got stuck, restart the 3DxWare service or the PC. |
-| A key shows the right name but does nothing | The function has no shortcut, or the shortcut differs from Alibre's. See section 3.2. |
+| A key shows the right name but does nothing | A *run by add-on* command only works in a window whose ribbon has it (e.g. Fillet in a part, not in a drawing), and only when it is enabled there; you hear a beep otherwise. For a function with a shortcut: the shortcut must be the same as Alibre's (section 3.2). |
+| The MENU button still shows 3DxWare's own menu | Fill at least one slot in **Radial menu** for this context and click **Save to devices**. If it still doesn't change, restart 3DxWare. |
 | The keys don't follow Part/Assembly/Sketch | Make sure **Switch layout automatically** is ticked and click **Save to devices** once. |
 | The command list is short or has no icons | Open a part *and* an assembly window first (the add-on reads the ribbons of open windows), then reopen the dialog. |
 | The **3Dconnexion** menu is missing in Alibre | Check that `C:\ProgramData\Alibre AddOns\KochSpaceMouse` exists, then run `install.cmd` again with Alibre closed. Look in **Add-on Manager** that *KOCH 3Dconnexion Keys* is enabled. |

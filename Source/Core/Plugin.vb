@@ -4,6 +4,7 @@
 ' The loader (KochSpaceMouse.dll) reads this assembly into memory, so the file is never
 ' locked and can be replaced while Alibre Design is running ("Reload" in the menu).
 
+Imports System.Collections.Generic
 Imports System.IO
 Imports System.Windows.Forms
 
@@ -18,6 +19,8 @@ Namespace KochSpaceMouse
         Private ReadOnly _timer As Timer
         Private _settings As Settings
         Private _applied As String = ""
+        Private ReadOnly _runner As CommandRunner
+        Private _hidden As New Dictionary(Of String, String)
 
         Public Shared Property AddOnFolder As String = ""
 
@@ -36,6 +39,9 @@ Namespace KochSpaceMouse
             Diag.Log = log
             _settings = Settings.Load(installFolder)
             _log("Core " & Version & " loaded; " & _settings.Functions.Count & " functions")
+            _runner = New CommandRunner(log)
+            UpdateRunner()
+            Application.AddMessageFilter(_runner)
             _timer = New Timer With {.Interval = 500}
             AddHandler _timer.Tick, AddressOf OnTick
             _timer.Start()
@@ -68,6 +74,21 @@ Namespace KochSpaceMouse
             Apply(ctx)
         End Sub
 
+        Private Sub UpdateRunner()
+            _hidden = _settings.HiddenKeys()
+            _runner.SetMap(_settings, _hidden)
+            If _hidden.Count > 0 Then _log(_hidden.Count & " functions without a shortcut are run by the add-on")
+        End Sub
+
+        ''' <summary>The function as 3DxWare should send it: its own shortcut, or its invisible key.</summary>
+        Private Function Effective(f As KeyFunction) As KeyFunction
+            If f Is Nothing OrElse Not String.IsNullOrWhiteSpace(f.Shortcut) Then Return f
+            Dim hk As String = Nothing
+            If Not _hidden.TryGetValue(f.Id, hk) Then Return f
+            Return New KeyFunction With {.Id = f.Id, .Name = f.Name, .Shortcut = hk, .Category = f.Category,
+                                         .Icon = f.Icon, .Command = f.Command}
+        End Function
+
         ''' <summary>Writes the layout for this context into the 3DxWare profile.</summary>
         Public Sub Apply(ctx As String)
             Try
@@ -78,9 +99,9 @@ Namespace KochSpaceMouse
                 Dim kb(Contexts.KeyCount - 1) As KeyFunction
                 Dim rm(Contexts.RadialSlots - 1) As KeyFunction
                 For i = 0 To Contexts.KeyCount - 1
-                    fs(i) = _settings.Find(ids(i))
-                    kb(i) = _settings.Find(kbIds(i))
-                    If i < Contexts.RadialSlots Then rm(i) = _settings.Find(rmIds(i))
+                    fs(i) = Effective(_settings.Find(ids(i)))
+                    kb(i) = Effective(_settings.Find(kbIds(i)))
+                    If i < Contexts.RadialSlots Then rm(i) = Effective(_settings.Find(rmIds(i)))
                 Next
                 Dim file = DxWareProfile.Write(fs, kb, rm, ctx, AddressOf Icons.LcdPng)
                 _applied = ctx
@@ -110,6 +131,7 @@ Namespace KochSpaceMouse
             End Using
             _settings = copy
             _settings.Save()
+            UpdateRunner()
             Dim target = If(ctx = "", "Part", ctx)
             Apply(target)
             MessageBox.Show(owner, "Saved. The keys now show the " & target & " layout." &
@@ -120,6 +142,7 @@ Namespace KochSpaceMouse
         Public Sub Dispose() Implements IDisposable.Dispose
             _timer.Stop()
             _timer.Dispose()
+            Application.RemoveMessageFilter(_runner)
         End Sub
     End Class
 

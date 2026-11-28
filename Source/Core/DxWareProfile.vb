@@ -346,6 +346,7 @@ Namespace KochSpaceMouse
             If key.Length >= 2 AndAlso key(0) = "F"c Then
                 Dim n As Integer
                 If Integer.TryParse(key.Substring(1), n) AndAlso n >= 1 AndAlso n <= 12 Then Return &H3A + n - 1
+                If n >= 13 AndAlso n <= 24 Then Return &H68 + n - 13        ' F13-F24: invisible keys run by the add-on
             End If
             Dim v As Integer
             If Named.TryGetValue(key, v) Then Return v

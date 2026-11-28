@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.1 – 2026-11-28
+- **Every Alibre ribbon command works on a key or in the radial menu, also without a keyboard shortcut.** The add-on gives such a command an invisible key (F13–F24 with Ctrl/Shift/Alt), catches it inside Alibre and clicks the ribbon button. The list shows *run by add-on*; Save only warns about functions that are not in Alibre's ribbon.
+- Radial menu: empty slots are shown as *(empty)*.
+
 ## 0.7.0 – 2026-11-28
 - **Radial menu** for every SpaceMouse, also the SpaceMouse Compact (idea: HaroldL). A third choice next to SpaceMouse Enterprise and Keyboard Pro: 8 functions around the cursor, opened with the MENU button (left button on the Compact, MENU key on Pro/Enterprise). One menu per context (Part, Assembly, Sketch, Drawing), and it follows the active Alibre window like the keys.
 - If no slot is filled, the MENU button keeps 3DxWare's own menu.
