@@ -26,7 +26,7 @@ Namespace KochSpaceMouse
 
         Public Shared ReadOnly Property Version As String
             Get
-                Return GetType(Plugin).Assembly.GetName().Version.ToString()
+                Return GetType(Plugin).Assembly.GetName().Version.ToString(3)
             End Get
         End Property
 
