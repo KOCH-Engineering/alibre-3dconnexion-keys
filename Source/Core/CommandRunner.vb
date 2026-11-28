@@ -8,6 +8,7 @@
 ' A message filter inside Alibre is the fallback if the hook cannot be installed.
 
 Imports System.Collections.Generic
+Imports System.Linq
 Imports System.Runtime.InteropServices
 Imports System.Windows.Forms
 
@@ -243,6 +244,8 @@ Namespace KochSpaceMouse
         ' Is this one of Alibre's ribbon commands (seen in any window)? Then typing its shortcut won't help either.
         Private Shared Function KnownAlibreCommand(f As KeyFunction) As Boolean
             If Not String.IsNullOrWhiteSpace(f.Command) Then Return True
+            ' a command for a window type (Part, Assembly, Sketch, Drawing) is Alibre's own; own scripts are "General"
+            If Contexts.All.Contains(f.Category) Then Return True
             Try
                 Dim sc = If(f.Shortcut, "").Trim().ToUpperInvariant()
                 For Each c In AlibreCommands.ScanCached()
