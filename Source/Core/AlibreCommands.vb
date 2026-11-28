@@ -192,7 +192,7 @@ Namespace KochSpaceMouse
                     Dim title = TipTitle(it)
                     If title <> "" Then caption = title
                     If String.IsNullOrWhiteSpace(caption) Then Continue For
-                    caption = caption.Replace("&", "").Trim()
+                    caption = Contexts.Readable(caption.Replace("&", "").Trim())
                     Dim name As String = ""
                     Try
                         If TypeOf it.Tag Is String Then name = CStr(it.Tag)
@@ -513,6 +513,8 @@ Namespace KochSpaceMouse
                                 If Not String.IsNullOrEmpty(cap) Then
                                     cap = cap.Replace("&", "").Trim()
                                     If Not maps.Item2.ContainsKey(cap) Then maps.Item2(cap) = it
+                                    Dim nice = Contexts.Readable(cap)
+                                    If nice <> cap AndAlso Not maps.Item2.ContainsKey(nice) Then maps.Item2(nice) = it
                                 End If
                                 Dim sc = ShortcutOf(it)
                                 If sc = "" Then sc = ShortcutFromHint(it)

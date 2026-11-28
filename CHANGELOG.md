@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.9 – 2026-11-28
+- Readable names for the few Alibre ribbon items that only have an internal id: `ACIS_DRAFT` → *Draft*, `CMD_DESIGN_CHECK_BODY` → *Design Check Body* (also for functions already on your keys).
+
+## 0.7.8 – 2026-11-28
+- Before clicking a ribbon command, the add-on checks that it is enabled and on a ribbon page that is shown. An Alibre command that is not available in the active window gives a beep and a short message (e.g. *Boss Extrude is not available in this window* in an assembly sketch) instead of doing nothing.
+
 ## 0.7.5 – 2026-11-28
 - Clearer dialog: the context (Part, Assembly, Sketch, Drawing) is a row of tabs with a blue bar under the chosen one; the device (SpaceMouse Enterprise, Keyboard Pro, Radial menu) is a smaller dark/light switch labelled *Device*. The chosen tab is now always shown.
 

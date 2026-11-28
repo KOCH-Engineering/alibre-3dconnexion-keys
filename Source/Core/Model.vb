@@ -36,6 +36,18 @@ Namespace KochSpaceMouse
 
         ''' <summary>Layout keys: "Part" ... for the SpaceMouse, "Part|Keyboard" ... for the Keyboard Pro
         ''' and "Part|Radial" ... for the radial menu (12 slots stored, the first 8 used).</summary>
+        ' Alibre has a few ribbon items without a real caption, only an id like "ACIS_DRAFT" or "CMD_DESIGN_CHECK_BODY".
+        ' Turn those into "Draft" / "Design Check Body"; normal captions are returned unchanged.
+        Public Function Readable(caption As String) As String
+            If String.IsNullOrEmpty(caption) OrElse caption.Contains(" ") OrElse Not caption.Contains("_") Then Return caption
+            If caption.ToUpperInvariant() <> caption Then Return caption
+            Dim words = caption.Split("_"c).Where(Function(w) w <> "").ToList()
+            While words.Count > 1 AndAlso {"ACIS", "CMD", "ID", "BTN", "COMMAND"}.Contains(words(0))
+                words.RemoveAt(0)
+            End While
+            Return String.Join(" ", words.Select(Function(w) If(w.Length <= 1, w, w.Substring(0, 1) & w.Substring(1).ToLowerInvariant())))
+        End Function
+
         Public Function AllLayoutKeys() As String()
             Return All.Concat(All.Select(Function(c) c & KeyboardSuffix)).Concat(All.Select(Function(c) c & RadialSuffix)).ToArray()
         End Function
@@ -172,6 +184,7 @@ Namespace KochSpaceMouse
                         .Icon = Attr(e, "icon"), .Command = Attr(e, "command")})
                     ' functions taken from Alibre's ribbon before 0.7.1: the command name is in the id
                     Dim last = s.Functions(s.Functions.Count - 1)
+                    last.Name = Contexts.Readable(last.Name)
                     If last.Command = "" AndAlso last.Id.StartsWith("alibre_") Then last.Command = last.Id.Substring(7)
                 Next
             End If
