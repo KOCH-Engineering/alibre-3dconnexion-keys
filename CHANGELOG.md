@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.10 – 2026-11-28
+- Each Alibre command is listed once: a ribbon button and a menu item with the same name ("Equation Editor" / "Equation Editor...") are merged, and the "..." is left out.
+
 ## 0.7.9 – 2026-11-28
 - Readable names for the few Alibre ribbon items that only have an internal id: `ACIS_DRAFT` → *Draft*, `CMD_DESIGN_CHECK_BODY` → *Design Check Body* (also for functions already on your keys).
 

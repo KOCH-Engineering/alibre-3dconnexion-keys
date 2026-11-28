@@ -99,7 +99,23 @@ Namespace KochSpaceMouse
             Next
             LastReport.Add("Commands found: " & result.Count & ", with shortcut: " & result.Values.Where(Function(c) c.Shortcut <> "").Count() &
                            " (icons are rendered when shown)")
-            Return result.Values.OrderBy(Function(c) c.Caption, StringComparer.CurrentCultureIgnoreCase).ToList()
+            ' the same command often exists twice (ribbon button and menu item "...") - keep one per caption,
+            ' preferring the one with a shortcut; the others' ribbon items are kept as alternatives
+            Dim merged As New List(Of FoundCommand)
+            For Each grp In result.Values.GroupBy(Function(c) c.Caption, StringComparer.OrdinalIgnoreCase)
+                Dim best = grp.OrderBy(Function(c) If(c.Shortcut = "", 1, 0)).First()
+                For Each other In grp
+                    If other IsNot best Then
+                        For Each it In other.Items
+                            If best.Items.Count < 6 Then best.Items.Add(it)
+                        Next
+                        If best.Page = "" Then best.Page = other.Page
+                    End If
+                Next
+                merged.Add(best)
+            Next
+            LastReport.Add("Unique commands: " & merged.Count)
+            Return merged.OrderBy(Function(c) c.Caption, StringComparer.CurrentCultureIgnoreCase).ToList()
         End Function
 
         ''' <summary>True if t is, or derives from, a DevExpress ribbon or bar manager.</summary>
@@ -192,7 +208,7 @@ Namespace KochSpaceMouse
                     Dim title = TipTitle(it)
                     If title <> "" Then caption = title
                     If String.IsNullOrWhiteSpace(caption) Then Continue For
-                    caption = Contexts.Readable(caption.Replace("&", "").Trim())
+                    caption = Contexts.Readable(caption.Replace("&", "").Trim().TrimEnd("."c, "…"c).Trim())
                     Dim name As String = ""
                     Try
                         If TypeOf it.Tag Is String Then name = CStr(it.Tag)
@@ -511,7 +527,7 @@ Namespace KochSpaceMouse
                                 Dim cap = TipTitle(it)
                                 If cap = "" Then cap = CStr(it.Caption)
                                 If Not String.IsNullOrEmpty(cap) Then
-                                    cap = cap.Replace("&", "").Trim()
+                                    cap = cap.Replace("&", "").Trim().TrimEnd("."c, "…"c).Trim()
                                     If Not maps.Item2.ContainsKey(cap) Then maps.Item2(cap) = it
                                     Dim nice = Contexts.Readable(cap)
                                     If nice <> cap AndAlso Not maps.Item2.ContainsKey(nice) Then maps.Item2(nice) = it
