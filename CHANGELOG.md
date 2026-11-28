@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.12 – 2026-11-28
+- **Fix: LCD keys 11 and 12** were written to the Enterprise's **Esc** and **Alt** keys (HIDButton_23/24). They are now written to the right buttons (HIDButton_77/78), and the wrong entries from earlier versions are removed, so Esc and Alt work as before.
+
 ## 0.7.11 – 2026-11-28
 - Context tabs with small icons (Part, Assembly, Sketch, Drawing), a light blue face on the chosen tab and a hover effect.
 

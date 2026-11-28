@@ -5,7 +5,7 @@
 ' Alibre Design connects as "Alibre Design 3DXware V2". In that profile:
 '   ButtonActions/ButtonAction  - a named macro with an icon (PNG, base64) and a key sequence
 '   MacroTable/MacroEntry       - a key stroke (HID usage codes, hex)
-'   Devices/Device[ID_ProductID_C633]/ButtonBank - maps HIDButton_13..24 (LCD keys 1..12) to macros
+'   Devices/Device[ID_ProductID_C633]/ButtonBank - maps HIDButton_13..22, 77, 78 (LCD keys 1..12) to macros
 ' Everything this add-on writes has an ID starting with "KOCH_", so the user's own entries are kept.
 
 Imports System.Collections.Generic
@@ -24,8 +24,11 @@ Namespace KochSpaceMouse
         Public Const KeyboardId As String = "ID_ProductID_C668" ' 3Dconnexion Keyboard Pro
         Public Const FirstLcdButton As Integer = 13              ' HIDButton_13 = LCD key 1
 
+        ' LCD keys 1-10 are HIDButton_13..22, keys 11 and 12 are HIDButton_77 and 78 (from 3Dconnexion's Base.xml;
+        ' HIDButton_23/24 are the Esc and Alt keys of the Enterprise)
         Public Shared Function SpaceMouseInput(i As Integer) As String
-            Return "HIDButton_" & (FirstLcdButton + i)
+            If i < 10 Then Return "HIDButton_" & (FirstLcdButton + i)
+            Return "HIDButton_" & (77 + i - 10)
         End Function
 
         Public Shared Function KeyboardInput(i As Integer) As String
@@ -118,7 +121,8 @@ Namespace KochSpaceMouse
             For i = 0 To Contexts.KeyCount - 1
                 inputs.Add(inputFor(i))
             Next
-            bank.Elements("Button").Where(Function(b) inputs.Contains(InputOf(b))).ToList().ForEach(Sub(b) b.Remove())
+            ' remove our old entries (also ones on wrong inputs from earlier versions) and anything on the keys we set
+            bank.Elements("Button").Where(Function(b) inputs.Contains(InputOf(b)) OrElse OutputOf(b).StartsWith(Prefix)).ToList().ForEach(Sub(b) b.Remove())
 
             For i = 0 To Contexts.KeyCount - 1
                 Dim f = functions(i)
