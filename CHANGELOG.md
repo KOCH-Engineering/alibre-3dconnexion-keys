@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.3 – 2026-11-28
+- The selected context tab (Part, Assembly, Sketch, Drawing) stays highlighted when you choose a device.
+
 ## 0.7.2 – 2026-11-28
 - Alibre commands chosen before 0.7.1 are also run by the add-on (no false warning on Save when the dialog is opened from another window type).
 - About shows the version with three digits.

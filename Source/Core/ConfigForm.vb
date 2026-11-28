@@ -122,19 +122,22 @@ Namespace KochSpaceMouse
             If unknown Then hasMouse = True : hasKeyboard = True
             _device = If(unknown, 2, If(hasMouse, 0, 1))
             Dim devTip As New ToolTip()
-            Dim dx = 20
+            ' own panel, so choosing a device does not un-select the context tab (radio buttons group per container)
+            Dim devPanel As New Panel With {.Location = New Point(20, 90), .Size = New Size(500, 26)}
+            Controls.Add(devPanel)
+            Dim dx = 0
             For d = 0 To 2
                 If (d = 0 AndAlso Not hasMouse) OrElse (d = 1 AndAlso Not hasKeyboard) Then Continue For
                 Dim rb As New RadioButton With {.Text = {"SpaceMouse Enterprise", "Keyboard Pro", "Radial menu"}(d),
                                                 .Appearance = Appearance.Button, .FlatStyle = FlatStyle.Flat,
                                                 .TextAlign = ContentAlignment.MiddleCenter, .Size = New Size(160, 26),
-                                                .Location = New Point(dx, 90), .Tag = d, .Checked = (d = _device)}
+                                                .Location = New Point(dx, 0), .Tag = d, .Checked = (d = _device)}
                 rb.FlatAppearance.BorderColor = Color.Silver
                 rb.FlatAppearance.CheckedBackColor = AccentBg
                 AddHandler rb.CheckedChanged, AddressOf OnDevice
                 If d = 2 Then devTip.SetToolTip(rb, "8 functions around the cursor, opened with the MENU button of any SpaceMouse" & vbCrLf &
                                                     "(left button on the SpaceMouse Compact, MENU key on Pro and Enterprise)")
-                Controls.Add(rb)
+                devPanel.Controls.Add(rb)
                 dx += 164
             Next
 
