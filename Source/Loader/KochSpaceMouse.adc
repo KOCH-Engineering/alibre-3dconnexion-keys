@@ -4,7 +4,7 @@
   <DLL type="Managed" loadedWhen="Startup" location="KochSpaceMouse.dll"/>
   <Icon location="SpaceMouse.ico"/>
   <Menu text="3Dconnexion"/>
-  <Description>Developed by KOCH Engineering with help from Claude (Anthropic). Choose the functions on the 12 LCD keys of a SpaceMouse Enterprise and the 12 macro keys of a Keyboard Pro – one layout per Part, Assembly, Sketch and Drawing, switched automatically.</Description>
+  <Description>Developed by KOCH Engineering (Henrik J. Koch, Denmark). Built with Claude (Anthropic). Choose the functions on the 12 LCD keys of a SpaceMouse Enterprise and the 12 macro keys of a Keyboard Pro – one layout per Part, Assembly, Sketch and Drawing, switched automatically.</Description>
   <Workspace type="Always"/>
   <Property name="Identifier" value="{C79D2D04-31E5-4887-83CC-6B2F46C2E768}"/>
 </AlibreDesignAddOn>

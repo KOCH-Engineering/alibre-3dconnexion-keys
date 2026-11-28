@@ -1,7 +1,7 @@
 KOCH 3Dconnexion Keys - add-on for Alibre Design
 ================================================
 Developed by KOCH Engineering (Henrik J. Koch, Denmark)
-with a lot of help from Claude (Anthropic).
+Built with Claude (Anthropic).
 https://www.linkedin.com/in/henrikjkoch/
 https://github.com/KOCH-Engineering/alibre-3dconnexion-keys
 

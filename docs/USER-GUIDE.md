@@ -179,4 +179,4 @@ Close Alibre and uninstall from **Windows Settings → Apps → KOCH 3Dconnexion
 
 ---
 
-*KOCH 3Dconnexion Keys is developed by KOCH Engineering (Henrik J. Koch, Denmark) with a lot of help from Claude (Anthropic). Feedback and ideas are welcome on [LinkedIn](https://www.linkedin.com/in/henrikjkoch/) or as GitHub issues.*
+*KOCH 3Dconnexion Keys is developed by KOCH Engineering (Henrik J. Koch, Denmark). Built with Claude (Anthropic). Feedback and ideas are welcome on [LinkedIn](https://www.linkedin.com/in/henrikjkoch/) or as GitHub issues.*
