@@ -33,7 +33,7 @@ Namespace KochSpaceMouse
             Catch
             End Try
 
-            y = Centered("KOCH 3Dconnexion Keys", New Font("Segoe UI", 12.0F, FontStyle.Bold), Color.Black, y) + 2
+            y = Centered("3Dconnexion Keys", New Font("Segoe UI", 12.0F, FontStyle.Bold), Color.Black, y) + 2
             y = Centered("for Alibre Design · version " & Plugin.Version, Font, Color.Gray, y) + 16
             y = CenteredLink("KOCH Engineering", New Font("Segoe UI", 11.0F, FontStyle.Bold), LinkedIn, y)
             y = CenteredLink("Henrik J. Koch", New Font("Segoe UI", 10.0F), LinkedIn, y)
