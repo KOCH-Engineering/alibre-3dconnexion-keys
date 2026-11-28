@@ -168,6 +168,9 @@ Namespace KochSpaceMouse
                         .Id = Attr(e, "id"), .Name = Attr(e, "name"), .Shortcut = Attr(e, "shortcut"),
                         .Category = If(Attr(e, "category") = "", "General", Attr(e, "category")),
                         .Icon = Attr(e, "icon"), .Command = Attr(e, "command")})
+                    ' functions taken from Alibre's ribbon before 0.7.1: the command name is in the id
+                    Dim last = s.Functions(s.Functions.Count - 1)
+                    If last.Command = "" AndAlso last.Id.StartsWith("alibre_") Then last.Command = last.Id.Substring(7)
                 Next
             End If
             Dim lx = root.Element("Layouts")

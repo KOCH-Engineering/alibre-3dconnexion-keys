@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.2 – 2026-11-28
+- Alibre commands chosen before 0.7.1 are also run by the add-on (no false warning on Save when the dialog is opened from another window type).
+- About shows the version with three digits.
+
 ## 0.7.1 – 2026-11-28
 - **Every Alibre ribbon command works on a key or in the radial menu, also without a keyboard shortcut.** The add-on gives such a command an invisible key (F13–F24 with Ctrl/Shift/Alt), catches it inside Alibre and clicks the ribbon button. The list shows *run by add-on*; Save only warns about functions that are not in Alibre's ribbon.
 - Radial menu: empty slots are shown as *(empty)*.
