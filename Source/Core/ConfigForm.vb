@@ -20,7 +20,9 @@ Namespace KochSpaceMouse
         Private _rowsLabel As Label
         Private ReadOnly _previewLabel As Label
 
-        Private ReadOnly _tabs As New List(Of RadioButton)
+        Private ReadOnly _tabs As New List(Of Label)
+        Private ReadOnly _devices As New List(Of Button)
+        Private _tabBar As Label
         Private ReadOnly _lcd As LcdPreview
         Private ReadOnly _combos(Contexts.KeyCount - 1) As FunctionPicker
         Private ReadOnly _rows(Contexts.KeyCount - 1) As Panel
@@ -100,46 +102,44 @@ Namespace KochSpaceMouse
             Next
             Controls.Add(title)
 
-            ' context tabs
+            ' context: tabs with a blue bar under the chosen one (what Alibre window the layout is for)
             Dim x = 20
             For Each c In Contexts.All
-                Dim rb As New RadioButton With {.Text = c, .Appearance = Appearance.Button, .FlatStyle = FlatStyle.Flat,
-                                                .TextAlign = ContentAlignment.MiddleCenter, .Size = New Size(96, 30),
-                                                .Location = New Point(x, 50), .Tag = c, .Checked = (c = _context)}
-                rb.FlatAppearance.BorderColor = Color.Silver
-                rb.FlatAppearance.CheckedBackColor = AccentBg
-                AddHandler rb.CheckedChanged, AddressOf OnTab
-                _tabs.Add(rb)
-                Controls.Add(rb)
-                x += 100
+                Dim tab As New Label With {.Text = c, .TextAlign = ContentAlignment.MiddleCenter, .Size = New Size(100, 30),
+                                           .Location = New Point(x, 48), .Tag = c, .Cursor = Cursors.Hand,
+                                           .Font = New Font("Segoe UI", 10.0F)}
+                AddHandler tab.Click, AddressOf OnTab
+                _tabs.Add(tab)
+                Controls.Add(tab)
+                x += 104
             Next
+            _tabBar = New Label With {.BackColor = Accent, .Size = New Size(100, 3), .Location = New Point(20, 78)}
+            Controls.Add(_tabBar)
+            Controls.Add(New Label With {.BackColor = Color.Gainsboro, .Location = New Point(20, 81), .Size = New Size(720, 1)})
 
-            ' device selector: the LCD keys / keyboard only when 3DxWare knows the device, the radial menu always
-            ' (it works on every SpaceMouse, also the Compact that has only two buttons)
+            ' device: small segmented buttons (what the layout is written to)
             Dim hasMouse, hasKeyboard As Boolean
             DxWareProfile.DetectDevices(hasMouse, hasKeyboard)
             Dim unknown = Not hasMouse AndAlso Not hasKeyboard
             If unknown Then hasMouse = True : hasKeyboard = True
             _device = If(unknown, 2, If(hasMouse, 0, 1))
             Dim devTip As New ToolTip()
-            ' own panel, so choosing a device does not un-select the context tab (radio buttons group per container)
-            Dim devPanel As New Panel With {.Location = New Point(20, 90), .Size = New Size(500, 26)}
-            Controls.Add(devPanel)
-            Dim dx = 0
+            Controls.Add(New Label With {.Text = "Device", .ForeColor = Color.DimGray, .AutoSize = True, .Location = New Point(20, 97)})
+            Dim dx = 74
             For d = 0 To 2
                 If (d = 0 AndAlso Not hasMouse) OrElse (d = 1 AndAlso Not hasKeyboard) Then Continue For
-                Dim rb As New RadioButton With {.Text = {"SpaceMouse Enterprise", "Keyboard Pro", "Radial menu"}(d),
-                                                .Appearance = Appearance.Button, .FlatStyle = FlatStyle.Flat,
-                                                .TextAlign = ContentAlignment.MiddleCenter, .Size = New Size(160, 26),
-                                                .Location = New Point(dx, 0), .Tag = d, .Checked = (d = _device)}
-                rb.FlatAppearance.BorderColor = Color.Silver
-                rb.FlatAppearance.CheckedBackColor = AccentBg
-                AddHandler rb.CheckedChanged, AddressOf OnDevice
-                If d = 2 Then devTip.SetToolTip(rb, "8 functions around the cursor, opened with the MENU button of any SpaceMouse" & vbCrLf &
-                                                    "(left button on the SpaceMouse Compact, MENU key on Pro and Enterprise)")
-                devPanel.Controls.Add(rb)
-                dx += 164
+                Dim b As New Button With {.Text = {"SpaceMouse Enterprise", "Keyboard Pro", "Radial menu"}(d),
+                                          .FlatStyle = FlatStyle.Flat, .Size = New Size(150, 24), .Location = New Point(dx, 93),
+                                          .Tag = d, .Font = New Font("Segoe UI", 8.5F), .Cursor = Cursors.Hand, .TabStop = False}
+                b.FlatAppearance.BorderColor = Color.Silver
+                AddHandler b.Click, AddressOf OnDevice
+                If d = 2 Then devTip.SetToolTip(b, "8 functions around the cursor, opened with the MENU button of any SpaceMouse" & vbCrLf &
+                                                   "(left button on the SpaceMouse Compact, MENU key on Pro and Enterprise)")
+                _devices.Add(b)
+                Controls.Add(b)
+                dx += 149     ' borders overlap: one segmented control
             Next
+            StyleSelectors()
 
             ' key preview
             _previewLabel = New Label With {.ForeColor = Color.DimGray, .Location = New Point(20, 126), .AutoSize = True}
@@ -380,11 +380,28 @@ Namespace KochSpaceMouse
         End Property
 
         Private Sub OnDevice(sender As Object, e As EventArgs)
-            Dim rb = CType(sender, RadioButton)
-            If Not rb.Checked Then Return
-            _device = CInt(rb.Tag)
+            Dim d = CInt(CType(sender, Control).Tag)
+            If d = _device Then Return
+            _device = d
             _selected = 0
+            StyleSelectors()
             LoadContext()
+        End Sub
+
+        ' chosen tab: bold, blue, bar underneath - chosen device: dark button with white text
+        Private Sub StyleSelectors()
+            For Each t In _tabs
+                Dim sel = (CStr(t.Tag) = _context)
+                t.Font = New Font("Segoe UI", 10.0F, If(sel, FontStyle.Bold, FontStyle.Regular))
+                t.ForeColor = If(sel, Accent, Color.DimGray)
+                If sel AndAlso _tabBar IsNot Nothing Then _tabBar.Left = t.Left
+            Next
+            For Each b In _devices
+                Dim sel = (CInt(b.Tag) = _device)
+                b.BackColor = If(sel, Color.FromArgb(&H19, &H19, &H19), Color.White)
+                b.ForeColor = If(sel, Color.White, Color.FromArgb(&H33, &H33, &H33))
+                b.FlatAppearance.MouseOverBackColor = If(sel, Color.FromArgb(&H19, &H19, &H19), AccentBg)
+            Next
         End Sub
 
         ' the radial menu has 8 rows (4 + 4) and a taller preview; the keys have 12 rows (6 + 6)
@@ -463,9 +480,10 @@ Namespace KochSpaceMouse
         ' ---------------------------------------------------------------- events
 
         Private Sub OnTab(sender As Object, e As EventArgs)
-            Dim rb = CType(sender, RadioButton)
-            If Not rb.Checked Then Return
-            _context = CStr(rb.Tag)
+            Dim c = CStr(CType(sender, Control).Tag)
+            If c = _context Then Return
+            _context = c
+            StyleSelectors()
             LoadContext()
         End Sub
 

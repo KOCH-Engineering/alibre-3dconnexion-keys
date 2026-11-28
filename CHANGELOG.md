@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.5 – 2026-11-28
+- Clearer dialog: the context (Part, Assembly, Sketch, Drawing) is a row of tabs with a blue bar under the chosen one; the device (SpaceMouse Enterprise, Keyboard Pro, Radial menu) is a smaller dark/light switch labelled *Device*. The chosen tab is now always shown.
+
 ## 0.7.4 – 2026-11-28
 - **Every function now goes through the add-on**, also those with a shortcut. The add-on clicks the command in Alibre's ribbon of the active window (found by command, name or shortcut); a command that is not in the ribbon (e.g. an Alibre Script shortcut) is typed as its shortcut.
 - **Feedback instead of silence:** if the command is greyed out or not in this window (e.g. Boss Extrude in an assembly sketch), you hear a beep and see a short message at the mouse pointer.
