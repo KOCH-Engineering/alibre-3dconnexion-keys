@@ -214,10 +214,12 @@ Namespace KochSpaceMouse
                     If item IsNot Nothing Then Exit For
                 Next
                 If item IsNot Nothing Then
-                    If AlibreCommands.Click(item) Then
-                        _log("Ran '" & f.Name & "' in '" & form.Text & "'")
+                    Dim why As String = ""
+                    If AlibreCommands.Available(item, why) Then
+                        AlibreCommands.Click(item)
+                        _log("Ran '" & f.Name & "' in '" & form.Text & "' (" & why & ")")
                     Else
-                        _log("'" & f.Name & "' is disabled in '" & form.Text & "'")
+                        _log("'" & f.Name & "' is not available in '" & form.Text & "' (" & why & ")")
                         Toast.Show(f.Name & " is not available here")
                     End If
                 ElseIf Not String.IsNullOrWhiteSpace(f.Shortcut) Then

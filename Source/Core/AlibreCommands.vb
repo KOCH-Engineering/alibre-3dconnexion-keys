@@ -495,6 +495,7 @@ Namespace KochSpaceMouse
                 Dim ribbons As New List(Of Object)
                 FindRibbons(form, ribbons, 0)
                 For Each r In ribbons
+                    RememberPlaces(r)
                     Try
                         For Each it In r.Items
                             Try
@@ -531,15 +532,80 @@ Namespace KochSpaceMouse
             Return Nothing
         End Function
 
-        ''' <summary>Clicks a ribbon item, like the user would. False if it is disabled or cannot be clicked.</summary>
-        Public Function Click(item As Object) As Boolean
+        ' item -> the ribbon pages and groups it is shown in (checked when clicked: contextual pages come and go)
+        Private ReadOnly _places As New Dictionary(Of Object, List(Of Object()))
+
+        Private Sub RememberPlaces(ribbon As Object)
             Try
-                If Not CBool(item.Enabled) Then Return False
+                For Each page In ribbon.Pages
+                    For Each grp In page.Groups
+                        For Each link In grp.ItemLinks
+                            Try
+                                Dim it = link.Item
+                                If it Is Nothing Then Continue For
+                                Dim l As List(Of Object()) = Nothing
+                                If Not _places.TryGetValue(it, l) Then
+                                    l = New List(Of Object())
+                                    _places(it) = l
+                                End If
+                                l.Add(New Object() {page, grp, link})
+                            Catch
+                            End Try
+                        Next
+                    Next
+                Next
             Catch
             End Try
-            item.PerformClick()
-            Return True
+        End Sub
+
+        Private Function Prop(o As Object, name As String) As Object
+            Try
+                Return o.GetType().InvokeMember(name, BindingFlags.GetProperty Or BindingFlags.Public Or BindingFlags.Instance, Nothing, o, Nothing)
+            Catch
+                Return Nothing
+            End Try
         End Function
+
+        ' True unless the value is a False boolean (missing properties count as visible)
+        Private Function NotFalse(v As Object) As Boolean
+            Return Not (TypeOf v Is Boolean AndAlso Not CBool(v))
+        End Function
+
+        ''' <summary>Can the user click this item right now: enabled, not hidden, and on a page that is shown.</summary>
+        Public Function Available(item As Object, ByRef why As String) As Boolean
+            Dim info As New List(Of String)
+            Dim ok = True
+            Dim en = Prop(item, "Enabled")
+            info.Add("Enabled=" & If(en, "?").ToString())
+            If Not NotFalse(en) Then ok = False
+            Dim vis = Prop(item, "Visibility")
+            info.Add("Visibility=" & If(vis, "?").ToString())
+            If vis IsNot Nothing AndAlso vis.ToString() = "Never" Then ok = False
+            Dim l As List(Of Object()) = Nothing
+            If _places.TryGetValue(item, l) AndAlso l.Count > 0 Then
+                Dim shown = False
+                For Each pl In l
+                    Dim page = pl(0), grp = pl(1), link = pl(2)
+                    Dim pv = Prop(page, "Visible"), gv = Prop(grp, "Visible"), lv = Prop(link, "Visible")
+                    Dim cat = Prop(page, "Category")
+                    Dim cv As Object = If(cat Is Nothing, Nothing, Prop(cat, "Visible"))
+                    info.Add("page '" & CStr(If(Prop(page, "Text"), "")) & "' visible=" & If(pv, "?").ToString() &
+                             If(cat Is Nothing, "", " category visible=" & If(cv, "?").ToString()) &
+                             " group=" & If(gv, "?").ToString() & " link=" & If(lv, "?").ToString())
+                    If NotFalse(pv) AndAlso NotFalse(gv) AndAlso NotFalse(lv) AndAlso NotFalse(cv) Then shown = True
+                Next
+                If Not shown Then ok = False
+            Else
+                info.Add("not on a ribbon page")
+            End If
+            why = String.Join("; ", info)
+            Return ok
+        End Function
+
+        ''' <summary>Clicks a ribbon item, like the user would.</summary>
+        Public Sub Click(item As Object)
+            item.PerformClick()
+        End Sub
 
         ''' <summary>Guess Part/Assembly/Sketch/Drawing/General from the ribbon page and window.</summary>
         Public Function GuessCategory(fc As FoundCommand) As String
