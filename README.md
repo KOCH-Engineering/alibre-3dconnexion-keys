@@ -119,6 +119,7 @@ Source/
 ## Related
 
 - [Export Parts](https://github.com/KOCH-Engineering/alibre-export-parts) exports STL/STEP for every part in an assembly in one click.
+- [Send to Slicer](https://github.com/KOCH-Engineering/alibre-send-to-slicer) sends the open part or assembly straight to PrusaSlicer, Bambu Studio or OrcaSlicer.
 
 ## License and trademarks
 
