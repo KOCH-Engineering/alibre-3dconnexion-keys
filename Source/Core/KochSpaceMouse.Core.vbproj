@@ -8,7 +8,7 @@
     <OptionStrict>On</OptionStrict>
     <OptionInfer>On</OptionInfer>
     <OptionExplicit>On</OptionExplicit>
-    <Version>0.6.4</Version>
+    <Version>0.6.5</Version>
     <Product>KOCH 3Dconnexion Keys (KOCH Engineering)</Product>
     <AssemblyTitle>KOCH 3Dconnexion Keys core</AssemblyTitle>
     <Company>KOCH Engineering</Company>
