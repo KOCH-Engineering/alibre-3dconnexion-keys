@@ -20,9 +20,8 @@ Namespace KochSpaceMouse
         Private _rowsLabel As Label
         Private ReadOnly _previewLabel As Label
 
-        Private ReadOnly _tabs As New List(Of Label)
+        Private ReadOnly _tabs As New List(Of ContextTab)
         Private ReadOnly _devices As New List(Of Button)
-        Private _tabBar As Label
         Private ReadOnly _lcd As LcdPreview
         Private ReadOnly _combos(Contexts.KeyCount - 1) As FunctionPicker
         Private ReadOnly _rows(Contexts.KeyCount - 1) As Panel
@@ -105,16 +104,12 @@ Namespace KochSpaceMouse
             ' context: tabs with a blue bar under the chosen one (what Alibre window the layout is for)
             Dim x = 20
             For Each c In Contexts.All
-                Dim tab As New Label With {.Text = c, .TextAlign = ContentAlignment.MiddleCenter, .Size = New Size(100, 30),
-                                           .Location = New Point(x, 48), .Tag = c, .Cursor = Cursors.Hand,
-                                           .Font = New Font("Segoe UI", 10.0F)}
+                Dim tab As New ContextTab With {.Text = c, .Size = New Size(128, 36), .Location = New Point(x, 45), .Tag = c}
                 AddHandler tab.Click, AddressOf OnTab
                 _tabs.Add(tab)
                 Controls.Add(tab)
-                x += 104
+                x += 130
             Next
-            _tabBar = New Label With {.BackColor = Accent, .Size = New Size(100, 3), .Location = New Point(20, 78)}
-            Controls.Add(_tabBar)
             Controls.Add(New Label With {.BackColor = Color.Gainsboro, .Location = New Point(20, 81), .Size = New Size(720, 1)})
 
             ' device: small segmented buttons (what the layout is written to)
@@ -391,10 +386,7 @@ Namespace KochSpaceMouse
         ' chosen tab: bold, blue, bar underneath - chosen device: dark button with white text
         Private Sub StyleSelectors()
             For Each t In _tabs
-                Dim sel = (CStr(t.Tag) = _context)
-                t.Font = New Font("Segoe UI", 10.0F, If(sel, FontStyle.Bold, FontStyle.Regular))
-                t.ForeColor = If(sel, Accent, Color.DimGray)
-                If sel AndAlso _tabBar IsNot Nothing Then _tabBar.Left = t.Left
+                t.Selected = (CStr(t.Tag) = _context)
             Next
             For Each b In _devices
                 Dim sel = (CInt(b.Tag) = _device)
@@ -576,6 +568,104 @@ Namespace KochSpaceMouse
         End Sub
 
         ' ---------------------------------------------------------------- LCD preview
+
+        ' A context tab: small drawn icon + name; the chosen one has a light blue face, bold blue text and a blue bar
+        Friend Class ContextTab
+            Inherits Control
+
+            Private _selected As Boolean
+            Private _hover As Boolean
+
+            Public Sub New()
+                DoubleBuffered = True
+                Cursor = Cursors.Hand
+                SetStyle(ControlStyles.SupportsTransparentBackColor Or ControlStyles.ResizeRedraw, True)
+                BackColor = Color.White
+            End Sub
+
+            Public Property Selected As Boolean
+                Get
+                    Return _selected
+                End Get
+                Set(v As Boolean)
+                    _selected = v
+                    Invalidate()
+                End Set
+            End Property
+
+            Protected Overrides Sub OnMouseEnter(e As EventArgs)
+                _hover = True : Invalidate() : MyBase.OnMouseEnter(e)
+            End Sub
+
+            Protected Overrides Sub OnMouseLeave(e As EventArgs)
+                _hover = False : Invalidate() : MyBase.OnMouseLeave(e)
+            End Sub
+
+            Protected Overrides Sub OnPaint(e As PaintEventArgs)
+                Dim g = e.Graphics
+                g.SmoothingMode = SmoothingMode.AntiAlias
+                g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit
+                Dim face = If(_selected, AccentBg, If(_hover, Color.FromArgb(&HF3, &HF5, &HF8), Color.White))
+                Using b As New SolidBrush(face), path = TopRounded(New Rectangle(0, 0, Width - 1, Height), 6)
+                    g.FillPath(b, path)
+                End Using
+                Dim col = If(_selected, Accent, Color.FromArgb(&H6B, &H6B, &H6B))
+                Using fnt As New Font("Segoe UI", 10.0F, If(_selected, FontStyle.Bold, FontStyle.Regular))
+                    Dim tw = TextRenderer.MeasureText(Text, fnt).Width
+                    Const isz = 16
+                    Dim total = isz + 6 + tw
+                    Dim x0 = (Width - total) \ 2
+                    Dim iy = (Height - 3 - isz) \ 2
+                    DrawIcon(g, Text, New RectangleF(x0, iy, isz, isz), col)
+                    TextRenderer.DrawText(g, Text, fnt, New Rectangle(x0 + isz + 6, 0, tw + 4, Height - 3), col,
+                                          TextFormatFlags.VerticalCenter Or TextFormatFlags.Left Or TextFormatFlags.NoPadding)
+                End Using
+                If _selected Then
+                    Using bar As New SolidBrush(Accent)
+                        g.FillRectangle(bar, 0, Height - 3, Width, 3)
+                    End Using
+                End If
+            End Sub
+
+            Private Shared Function TopRounded(r As Rectangle, rad As Integer) As GraphicsPath
+                Dim p As New GraphicsPath()
+                p.AddArc(r.X, r.Y, rad * 2, rad * 2, 180, 90)
+                p.AddArc(r.Right - rad * 2, r.Y, rad * 2, rad * 2, 270, 90)
+                p.AddLine(r.Right, r.Bottom, r.X, r.Bottom)
+                p.CloseFigure()
+                Return p
+            End Function
+
+            ' simple line icons: Part = cube, Assembly = two cubes, Sketch = pencil on a line, Drawing = sheet with a view
+            Private Shared Sub DrawIcon(g As Graphics, kind As String, r As RectangleF, col As Color)
+                Using pen As New Pen(col, 1.5F) With {.LineJoin = LineJoin.Round, .StartCap = LineCap.Round, .EndCap = LineCap.Round}
+                    Select Case kind
+                        Case "Part"
+                            Cube(g, pen, r.X + 1, r.Y + 1, r.Width - 2)
+                        Case "Assembly"
+                            Cube(g, pen, r.X, r.Y + 5, 9)
+                            Cube(g, pen, r.X + 6, r.Y, 9)
+                        Case "Sketch"
+                            g.DrawLine(pen, r.X + 1, r.Bottom - 1, r.Right - 1, r.Bottom - 1)
+                            Dim tip = New PointF(r.X + 3, r.Bottom - 4)
+                            g.DrawPolygon(pen, {tip, New PointF(r.X + 5, r.Bottom - 8), New PointF(r.Right - 3, r.Y + 1),
+                                                New PointF(r.Right - 1, r.Y + 3), New PointF(r.X + 7, r.Bottom - 6)})
+                        Case "Drawing"
+                            g.DrawPolygon(pen, {New PointF(r.X + 2, r.Y + 1), New PointF(r.Right - 5, r.Y + 1), New PointF(r.Right - 2, r.Y + 4),
+                                                New PointF(r.Right - 2, r.Bottom - 1), New PointF(r.X + 2, r.Bottom - 1)})
+                            g.DrawRectangle(pen, r.X + 5, r.Y + 6, 6, 5)
+                    End Select
+                End Using
+            End Sub
+
+            Private Shared Sub Cube(g As Graphics, pen As Pen, x As Single, y As Single, s As Single)
+                Dim d = s * 0.35F
+                Dim f = s - d
+                g.DrawRectangle(pen, x, y + d, f, f)
+                g.DrawLines(pen, {New PointF(x, y + d), New PointF(x + d, y), New PointF(x + s, y), New PointF(x + s, y + f), New PointF(x + f, y + s)})
+                g.DrawLine(pen, x + f, y + d, x + s, y)
+            End Sub
+        End Class
 
         Private Class LcdPreview
             Inherits Control

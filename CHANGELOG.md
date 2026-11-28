@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.11 – 2026-11-28
+- Context tabs with small icons (Part, Assembly, Sketch, Drawing), a light blue face on the chosen tab and a hover effect.
+
 ## 0.7.10 – 2026-11-28
 - Each Alibre command is listed once: a ribbon button and a menu item with the same name ("Equation Editor" / "Equation Editor...") are merged, and the "..." is left out.
 
