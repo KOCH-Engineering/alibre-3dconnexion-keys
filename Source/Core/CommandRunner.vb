@@ -222,6 +222,10 @@ Namespace KochSpaceMouse
                         _log("'" & f.Name & "' is not available in '" & form.Text & "' (" & why & ")")
                         Toast.Show(f.Name & " is not available here")
                     End If
+                ElseIf KnownAlibreCommand(f) Then
+                    ' an Alibre command, but not in this window (e.g. Boss Extrude in an assembly)
+                    _log("'" & f.Name & "' is not in the ribbon of '" & form.Text & "'")
+                    Toast.Show(f.Name & " is not available in this window")
                 ElseIf Not String.IsNullOrWhiteSpace(f.Shortcut) Then
                     ' not a ribbon command (e.g. an Alibre Script shortcut): type the shortcut
                     _log("'" & f.Name & "' not in the ribbon of '" & form.Text & "', typing " & f.Shortcut)
@@ -235,6 +239,20 @@ Namespace KochSpaceMouse
                 _log("Run '" & f.Name & "' failed: " & ex.Message)
             End Try
         End Sub
+
+        ' Is this one of Alibre's ribbon commands (seen in any window)? Then typing its shortcut won't help either.
+        Private Shared Function KnownAlibreCommand(f As KeyFunction) As Boolean
+            If Not String.IsNullOrWhiteSpace(f.Command) Then Return True
+            Try
+                Dim sc = If(f.Shortcut, "").Trim().ToUpperInvariant()
+                For Each c In AlibreCommands.ScanCached()
+                    If String.Equals(c.Caption, f.Name.Trim(), StringComparison.OrdinalIgnoreCase) Then Return True
+                    If sc <> "" AndAlso c.Shortcut = sc Then Return True
+                Next
+            Catch
+            End Try
+            Return False
+        End Function
 
         ' "CTRL+ALT+B" -> "^%b" for SendKeys
         Private Shared Function ToSendKeys(shortcut As String) As String
